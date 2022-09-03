@@ -10,8 +10,11 @@
 
 import Foundation
 
-final class StoryListPresenter {
-
+final class StoryListPresenter : StoryListPresenterInterface {
+    // MARK: - Public properties -
+    var numberOfsection: Int {
+        1
+    }
     // MARK: - Private properties -
 
     private unowned let view: StoryListViewInterface
@@ -32,9 +35,22 @@ final class StoryListPresenter {
         self.interactor = interactor
         self.wireframe = wireframe
     }
-}
-
-// MARK: - Extensions -
-
-extension StoryListPresenter: StoryListPresenterInterface {
+    
+    func viewDidAppear() {
+        self.view.startLoading()
+        self.interactor.fetch { [weak self] result in
+            guard let self = self else { return }
+            self.view.stopLoading()
+            switch result {
+            case .success(let value):
+                self.view.show(viewState: self.formatter.format(stories: value))
+            case .failure(let error):
+                self.wireframe.present(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    func didSelect(viewModel: StoryViewModel) {
+        self.wireframe.routeTo(desination: .detail(item: viewModel.story))
+    }
 }

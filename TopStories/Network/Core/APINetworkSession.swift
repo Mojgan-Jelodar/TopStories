@@ -23,16 +23,6 @@ final class APINetworkSession: NSObject {
     /// Dictionary containing associations of `ProgressAndCompletionHandlers` to `URLSessionTask` instances.
     private var taskToHandlersMap: [URLSessionTask: ProgressAndCompletionHandlers] = [:]
 
-    /// Convenience initializer.
-    public convenience init(queue: OperationQueue, timeOut: TimeInterval) {
-        // Configure the default URLSessionConfiguration.
-        let sessionConfiguration = URLSessionConfiguration.default
-        sessionConfiguration.timeoutIntervalForResource = timeOut
-        sessionConfiguration.waitsForConnectivity = true
-
-        self.init(configuration: sessionConfiguration, delegateQueue: queue)
-    }
-
     /// Designated initializer.
     /// - Parameters:
     ///   - configuration: `URLSessionConfiguration` instance.
@@ -58,9 +48,6 @@ final class APINetworkSession: NSObject {
     private func getHandlers(for task: URLSessionTask) -> ProgressAndCompletionHandlers? {
         return taskToHandlersMap[task]
     }
-
-}
-extension APINetworkSession: URLSessionDelegate {
 
 }
 extension APINetworkSession: NetworkSessionProtocol {

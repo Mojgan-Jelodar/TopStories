@@ -8,21 +8,19 @@
 import Foundation
 import UIKit
 
-final class StoryView: UIView {
-    var configuration: Configuration {
+fileprivate extension UIImage {
+    static let placeHolder = UIImage(named: "PlaceHolder")
+}
+fileprivate extension Layout {
+    static let thumbnailSize : CGSize = CGSize(width: 100, height: 100)
+}
+
+final class StoryView: UITableViewCell {
+    var configuration: Configuration? {
         didSet {
             self.setUpConfiguration()
         }
     }
-    
-    private lazy var holderView : UIStackView = {
-        let holderView = UIStackView(frame: .zero)
-        holderView.axis = .horizontal
-        holderView.distribution = .fill
-        holderView.alignment = .fill
-        holderView.spacing = Layout.spacing8
-        return holderView
-    }()
     
     private lazy var titleLabel : UILabel = {
         let headerLabel = UILabel()
@@ -32,17 +30,14 @@ final class StoryView: UIView {
         return headerLabel
     }()
     
-    private lazy var iconView : UIImageView = {
-        let iconView = UIImageView()
-        iconView.contentMode = .scaleAspectFill
-        return iconView
+    private lazy var iconView : ImageView = {
+        let imageView = ImageView()
+        return imageView
     }()
     
-    init(configuration: Configuration) {
-        self.configuration = configuration
-        super.init(frame: .zero)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setUpViews()
-        setUpConfiguration()
     }
     
     required init?(coder: NSCoder) {
@@ -50,29 +45,48 @@ final class StoryView: UIView {
     }
     
     private func setUpViews() {
-        addSubview(holderView)
-        holderView.addSubview(titleLabel)
-        holderView.addSubview(iconView)
-        setConstraints()
+        self.setupIconView()
+        self.setupTitleLabel()
     }
     
-    private func setConstraints() {
-       
+    private func setupTitleLabel() {
+        addSubview(titleLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        let leadingConstraint = NSLayoutConstraint(item: titleLabel, attribute: .leading, relatedBy: .equal, toItem: iconView, attribute: .trailing
+                                                   , multiplier: 1, constant: Layout.padding8)
+        let tarilingConstraint = NSLayoutConstraint(item: titleLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -Layout.padding8)
+        let topConstraint = NSLayoutConstraint(item: titleLabel, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: Layout.padding8)
+        let bottomConstraint = NSLayoutConstraint(item: titleLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -Layout.padding8)
+        let heightConstraint = NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: iconView, attribute: .height, multiplier: 1, constant: -Layout.padding8)
+        self.addConstraints([leadingConstraint, tarilingConstraint, topConstraint, bottomConstraint,heightConstraint])
+    }
+    
+    private func setupIconView() {
+        addSubview(iconView)
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        let widthConstraint = NSLayoutConstraint(item: iconView, attribute: .width, relatedBy: .equal,
+                                                 toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: Layout.thumbnailSize.width)
+        let heightConstraint = NSLayoutConstraint(item: iconView, attribute: .height, relatedBy: .equal,
+                                                  toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: Layout.thumbnailSize.height)
+        let leadingConstraint = NSLayoutConstraint(item: iconView, attribute: .leading, relatedBy: .equal,
+                                                   toItem: self, attribute: .leading, multiplier: 1, constant: Layout.padding8)
+        let verticalConstraint = NSLayoutConstraint(item: iconView, attribute: .centerY, relatedBy: .equal,
+                                                    toItem: self, attribute: .centerY, multiplier: 1, constant: .zero)
+        addConstraints([ widthConstraint, heightConstraint,leadingConstraint,verticalConstraint])
     }
     
     private func setUpConfiguration() {
-        self.titleLabel.text = configuration.viewModel.title
+        self.titleLabel.text = configuration?.viewModel.title
+        self.iconView.downLoadImage(url: configuration?.viewModel.largeThumbnailUrl ?? "")
     }
 }
 extension StoryView {
     struct Configuration {
         let viewModel : StoryViewModel
-        
         init(
             viewModel: StoryViewModel
         ) {
             self.viewModel = viewModel
         }
-     
     }
 }

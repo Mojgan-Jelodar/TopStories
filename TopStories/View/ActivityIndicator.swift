@@ -47,10 +47,8 @@ final class ActivityIndicator: UIView {
     
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
-        
         let startAngle = -CGFloat.pi / 2.0
         let endAngle = CGFloat.pi / 4
-        
         let path = UIBezierPath(
             arcCenter: .init(x: frame.width / 2, y: frame.height / 2),
             radius: min(frame.size.width, frame.size.height) / 2,
@@ -58,7 +56,6 @@ final class ActivityIndicator: UIView {
             endAngle: endAngle,
             clockwise: true
         )
-        
         trackLayer?.path = path.cgPath
     }
     
@@ -66,13 +63,11 @@ final class ActivityIndicator: UIView {
         guard layer.animation(forKey: Self.kRotationAnimationKey) == nil else {
             return
         }
-        
         let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation")
         rotationAnimation.fromValue = 0.0
         rotationAnimation.toValue = Float.pi * 2.0
         rotationAnimation.duration = duration
         rotationAnimation.repeatCount = Float.infinity
-        
         layer.add(rotationAnimation, forKey: Self.kRotationAnimationKey)
     }
     
@@ -80,14 +75,13 @@ final class ActivityIndicator: UIView {
         guard layer.animation(forKey: Self.kRotationAnimationKey) != nil else {
             return
         }
-        
         layer.removeAnimation(forKey: Self.kRotationAnimationKey)
+        trackLayer?.removeFromSuperlayer()
     }
     
 }
 
 extension ActivityIndicator {
-    
     struct Configuration {
         var color: UIColor
         var lineWidth: CGFloat
@@ -99,5 +93,4 @@ extension ActivityIndicator {
             self.lineWidth = lineWidth
         }
     }
-    
 }

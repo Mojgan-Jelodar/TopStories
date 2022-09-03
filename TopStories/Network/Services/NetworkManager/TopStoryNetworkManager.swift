@@ -8,15 +8,15 @@
 import Foundation
 import Combine
 final class TopStoryNetworkManager : TopStoryNetworkManagerProtocol {
-    
-    private var  requestDispatcher : APIRequestDispatcher
-    
-    init(environment : EnvironmentProtocol,sessionConfiguration : URLSessionConfiguration) {
+    private var requestDispatcher : APIRequestDispatcher
+    init(environment : EnvironmentProtocol,
+         sessionConfiguration : URLSessionConfiguration,
+         queue : OperationQueue) {
         requestDispatcher =  APIRequestDispatcher(environment: APIEnvironment.development,
-                                                  networkSession: APINetworkSession(configuration: sessionConfiguration, delegateQueue:  OperationQueue()))
+                                                  networkSession: APINetworkSession(configuration: sessionConfiguration, delegateQueue:  queue))
     }
     
-    func home(completionHandler :@escaping (Result<Stories,APIError>) -> Void) {
+    func home(completionHandler :@escaping (Result<Stories,APIError>) -> Void) -> OperationProtocol {
         let homeOperation = APIOperation(.api(request: TopStoriesEndpoint.home))
         homeOperation.execute(in: requestDispatcher, completion: { operationResult in
             guard case let .data(data) = operationResult else {
@@ -35,9 +35,21 @@ final class TopStoryNetworkManager : TopStoryNetworkManagerProtocol {
                 completionHandler(.failure(APIError.parseError(error.localizedDescription)))
             }
         })
+        return homeOperation
     }
     
-    func downloadImage(url: URL, completionHandler: (Result<URL, APIError>) -> Void) {
+    func downloadImage(url:URL, completionHandler : @escaping (Result<URL,APIError>) -> Void) -> OperationProtocol {
+        let downloadOperation = APIOperation(.download(request: URLRequest(url: url), progressHandler: nil))
+        downloadOperation.execute(in: requestDispatcher) { operationResult in
+            guard case let .file(fileUrl) = operationResult else {
+                guard case let .error(error) = operationResult else {
+                    return
+                }
+                completionHandler( Result.failure(error))
+                return
+            }
+            completionHandler(.success(fileUrl!))
+        }
+        return downloadOperation
     }
-
 }

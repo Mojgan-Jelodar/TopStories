@@ -9,9 +9,47 @@
 //
 
 import UIKit
+fileprivate extension Layout {
+    static let lineWidth : CGFloat = 4.0
+}
+fileprivate extension Layout {
+    static let emptyState : UIImage = UIImage(imageLiteralResourceName: "EmptyState")
+    static let emptyStateSize = CGSize(width: 200, height: 100)
+}
 
 final class StoryListViewController: UIViewController {
-
+    
+    // MARK: - Private properties -
+    let cellReuseIdentifier = "\(StoryView.self)"
+    private var items : [StoryViewModel] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    private lazy var loadingView : ActivityIndicator = {
+        let loadingView = ActivityIndicator(with: .init(color: .red, lineWidth: Layout.lineWidth))
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        return loadingView
+    }()
+    
+    private lazy var tableView : UITableView = {
+        let tableView = UITableView(frame: .zero, style: .plain)
+        tableView.tableFooterView = nil
+        tableView.separatorInset = .zero
+        tableView.register(StoryView.self, forCellReuseIdentifier: cellReuseIdentifier)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.dataSource = self
+        tableView.delegate = self
+        return tableView
+    }()
+    
+    private lazy var emptyView : UIImageView = {
+        let emptyView = UIImageView(image: Layout.emptyState)
+        emptyView.contentMode = .scaleAspectFit
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        return emptyView
+    }()
+    
     // MARK: - Public properties -
 
     var presenter: StoryListPresenterInterface!
@@ -20,11 +58,95 @@ final class StoryListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setupViews()
+        self.presenter.viewDidAppear()
     }
-
+    private func setupViews() {
+        self.view.addSubview(tableView)
+        self.view.addSubview(emptyView)
+        self.view.addSubview(loadingView)
+        self.emptyView.isHidden = true
+        self.tableView.isHidden = true
+        self.setConstraints()
+    }
+    private func setConstraints() {
+        setupEmptyState()
+        setupTableView()
+        setupLoadingView()
+    }
+    
+    private func setupEmptyState() {
+        let horizontalConstraint = NSLayoutConstraint(item: emptyView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0)
+        let verticalConstraint = NSLayoutConstraint(item: emptyView, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1, constant: 0)
+        let widthConstraint = NSLayoutConstraint(item: emptyView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: Layout.emptyStateSize.width)
+        let heightConstraint = NSLayoutConstraint(item: emptyView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: Layout.emptyStateSize.height)
+       view.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+    }
+    
+    private func setupTableView() {
+        let leadingConstraint = NSLayoutConstraint(item: tableView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: .zero)
+        let topConstraint = NSLayoutConstraint(item: tableView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: .zero)
+        let trailingConstraint = NSLayoutConstraint(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: .zero)
+        let bottomConstraint = NSLayoutConstraint(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: .zero)
+       view.addConstraints([leadingConstraint, topConstraint, trailingConstraint, bottomConstraint])
+    }
+    
+    private func setupLoadingView() {
+        let horizontalConstraint = NSLayoutConstraint(item: loadingView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: .zero)
+        let verticalConstraint = NSLayoutConstraint(item: loadingView, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1, constant: .zero)
+        let widthConstraint = NSLayoutConstraint(item: loadingView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: Layout.emptyStateSize.width)
+        let heightConstraint = NSLayoutConstraint(item: loadingView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: Layout.emptyStateSize.height)
+       view.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+    }
 }
 
-// MARK: - Extensions -
-
+// MARK: - Extensions - StoryListViewInterface
 extension StoryListViewController: StoryListViewInterface {
+    
+    func startLoading() {
+        loadingView.startAnimating()
+    }
+    
+    func stopLoading() {
+        loadingView.stopAnimating()
+    }
+    
+    func show(viewState: ViewState) {
+        switch viewState {
+        case .list(let array):
+            tableView.isHidden = false
+            emptyView.isHidden = true
+            items = array
+        case .emptyState:
+            tableView.isHidden = true
+            emptyView.isHidden = false
+        }
+    }
+}
+
+// MARK: - Extensions - UITableViewDataSource
+extension StoryListViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! StoryView
+        cell.configuration = .init(viewModel: items[indexPath.row])
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        self.presenter.numberOfsection
+    }
+}
+// MARK: - Extensions - UITableViewDelegate
+extension StoryListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.presenter.didSelect(viewModel: self.items[indexPath.row])
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+       UITableView.automaticDimension
+    }
 }

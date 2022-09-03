@@ -10,40 +10,29 @@
 
 import UIKit
 
-fileprivate extension Layout {
-    static let emptyState : UIImage = UIImage(imageLiteralResourceName: "EmptyState")
-}
-
 final class StoryListFormatter {
 }
 
 // MARK: - Extensions -
 
 extension StoryListFormatter: StoryListFormatterInterface {
+    func format(stories: Stories) -> StoryListViewController.ViewState {
+        guard let results = stories.results,!results.isEmpty else {
+            return .emptyState
+        }
+        return .list(results.map({StoryViewModel.init(story: $0)}))
+    }
+    
 }
 
 extension StoryListViewController {
     enum ViewState {
-        case loadingView
-        case emptyView
-        case storyView(item : Story)
-        
-        var view : UIView {
-            switch self {
-            case .loadingView:
-                return ActivityIndicator(with: .init())
-            case .emptyView:
-                return UIImageView(image: Layout.emptyState)
-            case .storyView(let item):
-                return StoryView(configuration: .init(viewModel: .init(story: item)))
-            }
-        }
+        case list([StoryViewModel])
+        case emptyState
     }
 }
 
-struct StoryViewModel : CustomStringConvertible {
-    var thumbnailImage : UIImage?
-    var img : UIImage?
+final class StoryViewModel : CustomStringConvertible {
     
     var title : String {
         story.title ?? ""
@@ -51,7 +40,14 @@ struct StoryViewModel : CustomStringConvertible {
     var description: String {
         story.section ?? ""
     }
-    private let story : Story
+    var largeThumbnailUrl : String? {
+        guard let largeThumbnail = self.story.multimedia?.first(where: {$0.format == .largeThumbnail}) else {
+            return nil
+        }
+        return largeThumbnail.url
+    }
+    
+    let story : Story
     
     init(story : Story) {
         self.story = story

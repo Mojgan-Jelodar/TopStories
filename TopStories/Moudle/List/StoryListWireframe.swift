@@ -11,24 +11,37 @@
 import UIKit
 
 final class StoryListWireframe: BaseWireframe<StoryListViewController> {
-
+    
     // MARK: - Private properties -
-
+    private lazy var operationQueue : OperationQueue = {
+        let operationQueue = OperationQueue()
+        operationQueue.qualityOfService = .userInitiated
+        operationQueue.maxConcurrentOperationCount = 4
+        return operationQueue
+    }()
+    
     // MARK: - Module setup -
-
+    
     init() {
-        let moduleViewController = StoryListViewController()
+        let moduleViewController = StoryListViewController(nibName: nil, bundle: nil)
         super.init(viewController: moduleViewController)
-
         let formatter = StoryListFormatter()
-        let interactor = StoryListInteractor()
+        let interactor = StoryListInteractor(worker: TopStoryNetworkManager(environment: APIEnvironment.production, sessionConfiguration: .default, queue: operationQueue))
         let presenter = StoryListPresenter(view: moduleViewController, formatter: formatter, interactor: interactor, wireframe: self)
         moduleViewController.presenter = presenter
     }
-
+    
 }
 
 // MARK: - Extensions -
 
 extension StoryListWireframe: StoryListWireframeInterface {
+    func routeTo(desination: StoryListDesination) {
+        //TODO: - go to desination
+    }
+    
+    func present(message: String) {
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        self.viewController.present(alertController, animated: true, completion: nil)
+    }
 }

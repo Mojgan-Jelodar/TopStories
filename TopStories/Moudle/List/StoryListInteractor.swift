@@ -10,10 +10,29 @@
 
 import Foundation
 
-final class StoryListInteractor {
-}
-
-// MARK: - Extensions -
-
-extension StoryListInteractor: StoryListInteractorInterface {
+final class StoryListInteractor : StoryListInteractorInterface {
+    private let worker: TopStoryNetworkManagerProtocol
+    private var operations : [OperationProtocol] = []
+    private var cache: NSCache<NSString, NSURL> = .init()
+    
+    deinit {
+        operations.forEach({$0.cancel()})
+    }
+    
+    init(worker: TopStoryNetworkManagerProtocol) {
+        self.worker = worker
+    }
+    
+    func fetch(result: @escaping ((Result<Stories, APIError>) -> Void)) {
+        operations.append(worker.home(completionHandler: { completionHandler in
+            DispatchQueue.main.async {
+                switch completionHandler {
+                case .success(let value):
+                    result(.success(value))
+                case .failure(let error):
+                    result(.failure(error))
+                }
+            }
+        }))
+    }
 }

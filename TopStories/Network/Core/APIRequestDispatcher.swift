@@ -9,13 +9,13 @@ import Foundation
 //swift
 /// Class that handles the dispatch of requests to an environment with a given configuration.
 final class APIRequestDispatcher: RequestDispatcherProtocol {
-
+    
     /// The environment configuration.
     private var environment: EnvironmentProtocol
-
+    
     /// The network session configuration.
     private var networkSession: NetworkSessionProtocol
-
+    
     /// Required initializer.
     /// - Parameters:
     ///   - environment: Instance conforming to `EnvironmentProtocol` used to determine on which environment the requests will be executed.
@@ -24,7 +24,7 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
         self.environment = environment
         self.networkSession = networkSession
     }
-
+    
     /// Executes a request.
     /// - Parameters:
     ///   - request: Instance conforming to `RequestProtocol`
@@ -44,7 +44,7 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
                 let result = self.verify(data: data, urlResponse: urlResponse, error: error)
                 guard case let .success(response) = result else {
                     guard case let .failure(err) = result else {
-                      return
+                        return
                     }
                     completion(.failure(err))
                     return
@@ -62,7 +62,7 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
     }
     
     func download(request: URLRequest, progressHandler: ProgressHandler?, completion: @escaping (Result<URL, APIError>) -> Void) -> URLSessionTask? {
-        return networkSession.downloadTask(request: request, progressHandler: progressHandler) { [weak self]  fileUrl, urlResponse, error in
+        let task = networkSession.downloadTask(request: request, progressHandler: progressHandler) { [weak self]  fileUrl, urlResponse, error in
             guard let self = self,
                   let urlResponse = urlResponse as? HTTPURLResponse else {
                 completion(.failure(APIError.invalidResponse))
@@ -71,7 +71,7 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
             let result = self.verify(data: fileUrl, urlResponse: urlResponse, error: error)
             guard case let .success(url) = result else {
                 guard case let .failure(err) = result else {
-                  return
+                    return
                 }
                 completion(.failure(err))
                 return
@@ -80,10 +80,12 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
             completion(.success(url as! URL))
             // swiftlint:enable force_cast
         }
+        task?.resume()
+        return task
     }
     
     func upload(request: URLRequest, data: Data, progressHandler: ProgressHandler?, completion: @escaping (Result<Data, APIError>) -> Void) -> URLSessionTask? {
-        return networkSession.downloadTask(request: request, progressHandler: progressHandler) { [weak self] _, urlResponse, error in
+        let task = networkSession.downloadTask(request: request, progressHandler: progressHandler) { [weak self] _, urlResponse, error in
             guard let self = self,
                   let urlResponse = urlResponse as? HTTPURLResponse else {
                 completion(.failure(APIError.invalidResponse))
@@ -92,7 +94,7 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
             let result = self.verify(data: data, urlResponse: urlResponse, error: error)
             guard case let .success(response) = result else {
                 guard case let .failure(err) = result else {
-                  return
+                    return
                 }
                 completion(.failure(err))
                 return
@@ -101,6 +103,8 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
             completion(.success(response as! Data))
             // swiftlint:enable force_cast
         }
+        task?.resume()
+        return task
     }
 }
 
