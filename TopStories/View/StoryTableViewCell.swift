@@ -8,14 +8,11 @@
 import Foundation
 import UIKit
 
-fileprivate extension UIImage {
-    static let placeHolder = UIImage(named: "PlaceHolder")
-}
 fileprivate extension Layout {
     static let thumbnailSize : CGSize = CGSize(width: 100, height: 100)
 }
 
-final class StoryView: UITableViewCell {
+final class StoryTableViewCell: UITableViewCell {
     var configuration: Configuration? {
         didSet {
             self.setUpConfiguration()
@@ -80,11 +77,11 @@ final class StoryView: UITableViewCell {
         self.iconView.downLoadImage(url: configuration?.viewModel.largeThumbnailUrl ?? "")
     }
 }
-extension StoryView {
+extension StoryTableViewCell {
     struct Configuration {
-        let viewModel : StoryViewModel
+        let viewModel : StoryCellViewModel
         init(
-            viewModel: StoryViewModel
+            viewModel: StoryCellViewModel
         ) {
             self.viewModel = viewModel
         }

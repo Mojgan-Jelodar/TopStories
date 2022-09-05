@@ -14,6 +14,12 @@
 		090B3E5E28C3AC22000AA2A8 /* ImageViewInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090B3E5D28C3AC22000AA2A8 /* ImageViewInteractor.swift */; };
 		09457C1F28C5FB780073CE66 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09457C1E28C5FB780073CE66 /* Strings.swift */; };
 		09457C2428C5FDC30073CE66 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09457C2628C5FDC30073CE66 /* Localizable.strings */; };
+		09457C2F28C61E130073CE66 /* StoryDetailInterfaces.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09457C2928C61E130073CE66 /* StoryDetailInterfaces.swift */; };
+		09457C3028C61E130073CE66 /* StoryDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09457C2A28C61E130073CE66 /* StoryDetailPresenter.swift */; };
+		09457C3128C61E130073CE66 /* StoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09457C2B28C61E130073CE66 /* StoryDetailViewController.swift */; };
+		09457C3228C61E130073CE66 /* StoryDetailFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09457C2C28C61E130073CE66 /* StoryDetailFormatter.swift */; };
+		09457C3328C61E130073CE66 /* StoryDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09457C2D28C61E130073CE66 /* StoryDetailInteractor.swift */; };
+		09457C3428C61E130073CE66 /* StoryDetailWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09457C2E28C61E130073CE66 /* StoryDetailWireframe.swift */; };
 		096CC8EA28BA883A00E5CB69 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC8E928BA883A00E5CB69 /* AppDelegate.swift */; };
 		096CC8EE28BA883A00E5CB69 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC8ED28BA883A00E5CB69 /* ViewController.swift */; };
 		096CC8F128BA883A00E5CB69 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 096CC8EF28BA883A00E5CB69 /* Main.storyboard */; };
@@ -33,7 +39,7 @@
 		096CC93428BA973B00E5CB69 /* AppConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC93328BA973B00E5CB69 /* AppConstant.swift */; };
 		096CC93728BA9C8100E5CB69 /* TopStories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC93628BA9C8100E5CB69 /* TopStories.swift */; };
 		099FAD0428BD6ED600A42F63 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FAD0328BD6ED600A42F63 /* Layout.swift */; };
-		099FAD0628BD717000A42F63 /* StoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FAD0528BD717000A42F63 /* StoryView.swift */; };
+		099FAD0628BD717000A42F63 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FAD0528BD717000A42F63 /* StoryTableViewCell.swift */; };
 		09AA686C28BB5DD000F62816 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AA686B28BB5DD000F62816 /* ParameterEncoding.swift */; };
 		09AA686E28BB5E5000F62816 /* URLEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AA686D28BB5E5000F62816 /* URLEncoding.swift */; };
 		09AA687D28BBDE2100F62816 /* TopStoryNetworkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AA687C28BBDE2100F62816 /* TopStoryNetworkManagerProtocol.swift */; };
@@ -83,6 +89,12 @@
 		09457C2328C5FDB60073CE66 /* fa-IR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fa-IR"; path = "fa-IR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		09457C2528C5FDC30073CE66 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		09457C2728C5FDC60073CE66 /* fa-IR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fa-IR"; path = "fa-IR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		09457C2928C61E130073CE66 /* StoryDetailInterfaces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailInterfaces.swift; sourceTree = "<group>"; };
+		09457C2A28C61E130073CE66 /* StoryDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailPresenter.swift; sourceTree = "<group>"; };
+		09457C2B28C61E130073CE66 /* StoryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailViewController.swift; sourceTree = "<group>"; };
+		09457C2C28C61E130073CE66 /* StoryDetailFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailFormatter.swift; sourceTree = "<group>"; };
+		09457C2D28C61E130073CE66 /* StoryDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailInteractor.swift; sourceTree = "<group>"; };
+		09457C2E28C61E130073CE66 /* StoryDetailWireframe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailWireframe.swift; sourceTree = "<group>"; };
 		096CC8E628BA883A00E5CB69 /* TopStories.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TopStories.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		096CC8E928BA883A00E5CB69 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		096CC8ED28BA883A00E5CB69 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -106,7 +118,7 @@
 		096CC93328BA973B00E5CB69 /* AppConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstant.swift; sourceTree = "<group>"; };
 		096CC93628BA9C8100E5CB69 /* TopStories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopStories.swift; sourceTree = "<group>"; };
 		099FAD0328BD6ED600A42F63 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
-		099FAD0528BD717000A42F63 /* StoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryView.swift; sourceTree = "<group>"; };
+		099FAD0528BD717000A42F63 /* StoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
 		09AA686B28BB5DD000F62816 /* ParameterEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterEncoding.swift; sourceTree = "<group>"; };
 		09AA686D28BB5E5000F62816 /* URLEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEncoding.swift; sourceTree = "<group>"; };
 		09AA687C28BBDE2100F62816 /* TopStoryNetworkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopStoryNetworkManagerProtocol.swift; sourceTree = "<group>"; };
@@ -163,6 +175,19 @@
 				090B3E5D28C3AC22000AA2A8 /* ImageViewInteractor.swift */,
 			);
 			path = ImageView;
+			sourceTree = "<group>";
+		};
+		09457C2828C61DC70073CE66 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				09457C2928C61E130073CE66 /* StoryDetailInterfaces.swift */,
+				09457C2A28C61E130073CE66 /* StoryDetailPresenter.swift */,
+				09457C2B28C61E130073CE66 /* StoryDetailViewController.swift */,
+				09457C2C28C61E130073CE66 /* StoryDetailFormatter.swift */,
+				09457C2D28C61E130073CE66 /* StoryDetailInteractor.swift */,
+				09457C2E28C61E130073CE66 /* StoryDetailWireframe.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		096CC8DD28BA883A00E5CB69 = {
@@ -270,9 +295,10 @@
 		099FACE528BCD2E600A42F63 /* Moudle */ = {
 			isa = PBXGroup;
 			children = (
-				090B3E5128C399AF000AA2A8 /* ImageView */,
 				09C756CB28BEA21500BAF69F /* Base */,
 				09C756D828BEA24C00BAF69F /* List */,
+				09457C2828C61DC70073CE66 /* Detail */,
+				090B3E5128C399AF000AA2A8 /* ImageView */,
 			);
 			path = Moudle;
 			sourceTree = "<group>";
@@ -280,7 +306,7 @@
 		099FACFE28BD51D200A42F63 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				099FAD0528BD717000A42F63 /* StoryView.swift */,
+				099FAD0528BD717000A42F63 /* StoryTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -530,13 +556,14 @@
 				096CC91D28BA890100E5CB69 /* EnvironmentProtocol.swift in Sources */,
 				099FAD0428BD6ED600A42F63 /* Layout.swift in Sources */,
 				096CC92128BA89C100E5CB69 /* NetworkSessionProtocol.swift in Sources */,
+				09457C2F28C61E130073CE66 /* StoryDetailInterfaces.swift in Sources */,
 				09C756D428BEA23500BAF69F /* UIStoryboardExtension.swift in Sources */,
 				09AA686E28BB5E5000F62816 /* URLEncoding.swift in Sources */,
 				096CC93228BA930800E5CB69 /* TopStoriesEndpoint.swift in Sources */,
 				09C756E128BEA28000BAF69F /* StoryListViewController.swift in Sources */,
 				096CC93728BA9C8100E5CB69 /* TopStories.swift in Sources */,
 				09C756D628BEA23500BAF69F /* ViewInterface.swift in Sources */,
-				099FAD0628BD717000A42F63 /* StoryView.swift in Sources */,
+				099FAD0628BD717000A42F63 /* StoryTableViewCell.swift in Sources */,
 				09C756E328BEA28000BAF69F /* StoryListInteractor.swift in Sources */,
 				096CC93428BA973B00E5CB69 /* AppConstant.swift in Sources */,
 				09C756D328BEA23500BAF69F /* FormatterInterface.swift in Sources */,
@@ -544,9 +571,11 @@
 				096CC92B28BA8DBE00E5CB69 /* APIError.swift in Sources */,
 				09C756E428BEA28000BAF69F /* StoryListWireframe.swift in Sources */,
 				090B3E5A28C3A47D000AA2A8 /* ImageViewPresenter.swift in Sources */,
+				09457C3228C61E130073CE66 /* StoryDetailFormatter.swift in Sources */,
 				09C756EA28BEA4E200BAF69F /* APINetworkSession.swift in Sources */,
 				090B3E5328C39A2A000AA2A8 /* ImageViewProtocol.swift in Sources */,
 				096CC8EE28BA883A00E5CB69 /* ViewController.swift in Sources */,
+				09457C3328C61E130073CE66 /* StoryDetailInteractor.swift in Sources */,
 				090B3E5E28C3AC22000AA2A8 /* ImageViewInteractor.swift in Sources */,
 				09C756DF28BEA28000BAF69F /* StoryListInterfaces.swift in Sources */,
 				09AA688028BBDEFE00F62816 /* TopStoryNetworkManager.swift in Sources */,
@@ -557,8 +586,11 @@
 				096CC92728BA8D1400E5CB69 /* RequestDispatcherProtocol.swift in Sources */,
 				096CC8EA28BA883A00E5CB69 /* AppDelegate.swift in Sources */,
 				09C756E028BEA28000BAF69F /* StoryListPresenter.swift in Sources */,
+				09457C3028C61E130073CE66 /* StoryDetailPresenter.swift in Sources */,
+				09457C3428C61E130073CE66 /* StoryDetailWireframe.swift in Sources */,
 				09C756E228BEA28000BAF69F /* StoryListFormatter.swift in Sources */,
 				09AA687D28BBDE2100F62816 /* TopStoryNetworkManagerProtocol.swift in Sources */,
+				09457C3128C61E130073CE66 /* StoryDetailViewController.swift in Sources */,
 				096CC92D28BA8DEF00E5CB69 /* APIRequestDispatcher.swift in Sources */,
 				090B3E5C28C3AA34000AA2A8 /* ImageViewFormatter.swift in Sources */,
 				096CC91B28BA887E00E5CB69 /* RequestProtocol.swift in Sources */,

@@ -27,7 +27,7 @@ protocol StoryListViewInterface: ViewInterface {
 protocol StoryListPresenterInterface: PresenterInterface {
     var numberOfsection : Int { get }
     func viewDidAppear()
-    func didSelect(viewModel: StoryViewModel)
+    func didSelect(viewModel: StoryCellViewModel)
     func pullToRefresh()
 }
 

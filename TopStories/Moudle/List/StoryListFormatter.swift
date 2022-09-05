@@ -20,25 +20,21 @@ extension StoryListFormatter: StoryListFormatterInterface {
         guard let results = stories.results,!results.isEmpty else {
             return .emptyState
         }
-        return .list(results.map({StoryViewModel.init(story: $0)}))
+        return .list(results.map({StoryCellViewModel.init(story: $0)}))
     }
     
 }
 
 extension StoryListViewController {
     enum ViewState {
-        case list([StoryViewModel])
+        case list([StoryCellViewModel])
         case emptyState
     }
 }
 
-final class StoryViewModel : CustomStringConvertible {
-    
+struct StoryCellViewModel {
     var title : String {
         story.title ?? ""
-    }
-    var description: String {
-        story.section ?? ""
     }
     var largeThumbnailUrl : String? {
         guard let largeThumbnail = self.story.multimedia?.first(where: {$0.format == .largeThumbnail}) else {

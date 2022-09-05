@@ -50,7 +50,7 @@ final class StoryListPresenter : StoryListPresenterInterface {
         }
     }
     
-    func didSelect(viewModel: StoryViewModel) {
+    func didSelect(viewModel: StoryCellViewModel) {
         self.wireframe.routeTo(desination: .detail(item: viewModel.story))
     }
     func pullToRefresh() {

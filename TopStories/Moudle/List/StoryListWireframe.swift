@@ -37,7 +37,11 @@ final class StoryListWireframe: BaseWireframe<StoryListViewController> {
 
 extension StoryListWireframe: StoryListWireframeInterface {
     func routeTo(desination: StoryListDesination) {
-        //TODO: - go to desination
+        switch desination {
+        case .detail(let item):
+            let wireframe = StoryDetailWireframe(story: item)
+            self.navigationController?.pushWireframe(wireframe)
+        }
     }
     
     func present(message: String) {

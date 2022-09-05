@@ -50,6 +50,7 @@ struct Story: Decodable {
     let url: String?
     let multimedia: [Multimedia]?
     let shortURL: String?
+    let updatedDate : Date?
 
     enum CodingKeys: String, CodingKey {
         case section, subsection, title, abstract, url, uri, byline
@@ -67,6 +68,7 @@ struct Story: Decodable {
         url = try container.decodeIfPresent(String.self, forKey: .url)
         multimedia = try container.decodeIfPresent([Multimedia].self, forKey: .multimedia)
         shortURL = try container.decodeIfPresent(String.self, forKey: .shortURL)
+        updatedDate = try container.decodeIfPresent(Date.self, forKey: .updatedDate)
     }
 }
 

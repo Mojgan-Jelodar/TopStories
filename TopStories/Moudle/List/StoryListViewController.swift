@@ -19,8 +19,8 @@ fileprivate extension Layout {
 final class StoryListViewController: UIViewController {
     
     // MARK: - Private properties -
-    let cellReuseIdentifier = "\(StoryView.self)"
-    private var items : [StoryViewModel] = [] {
+    let cellReuseIdentifier = "\(StoryTableViewCell.self)"
+    private var items : [StoryCellViewModel] = [] {
         didSet {
             tableView.reloadData()
         }
@@ -37,7 +37,7 @@ final class StoryListViewController: UIViewController {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.tableFooterView = nil
         tableView.separatorInset = .zero
-        tableView.register(StoryView.self, forCellReuseIdentifier: cellReuseIdentifier)
+        tableView.register(StoryTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
         tableView.delegate = self
@@ -64,6 +64,16 @@ final class StoryListViewController: UIViewController {
         self.setupViews()
         self.presenter.viewDidAppear()
     }
+    
+    override func loadView() {
+        super.loadView()
+        if #available(iOS 13.0, *) {
+            self.view.backgroundColor = .systemBackground
+        } else {
+            self.view.backgroundColor = .white
+        }
+    }
+    // MARK: - Setup View -
     private func setupViews() {
         self.title = Strings.StoryListView.pageTitle
         self.view.addSubview(tableView)
@@ -92,7 +102,6 @@ final class StoryListViewController: UIViewController {
        view.addConstraints([leadingConstraint, topConstraint, trailingConstraint, bottomConstraint])
     }
     @objc func refresh(_ sender: AnyObject) {
-        
         self.presenter.pullToRefresh()
     }
 }
@@ -129,7 +138,7 @@ extension StoryListViewController: UITableViewDataSource {
     
     //swiftlint:disable force_cast
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! StoryView
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! StoryTableViewCell
         cell.configuration = .init(viewModel: items[indexPath.row])
         return cell
     }
