@@ -41,7 +41,9 @@ extension StoryListWireframe: StoryListWireframeInterface {
     }
     
     func present(message: String) {
-        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let alertController = UIAlertController(title: Strings.CommonStrings.alertTitle,
+                                                message: message, preferredStyle: .alert)
+        alertController.addAction(.init(title: Strings.CommonStrings.ok, style: .default))
         self.viewController.present(alertController, animated: true, completion: nil)
     }
 }

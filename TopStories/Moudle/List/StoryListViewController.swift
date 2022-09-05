@@ -13,7 +13,6 @@ fileprivate extension Layout {
     static let lineWidth : CGFloat = 4.0
 }
 fileprivate extension Layout {
-    static let emptyState : UIImage = UIImage(imageLiteralResourceName: "EmptyState")
     static let emptyStateSize = CGSize(width: 200, height: 100)
 }
 
@@ -26,10 +25,12 @@ final class StoryListViewController: UIViewController {
             tableView.reloadData()
         }
     }
-    private lazy var loadingView : ActivityIndicator = {
-        let loadingView = ActivityIndicator(with: .init(color: .red, lineWidth: Layout.lineWidth))
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
-        return loadingView
+    
+    private lazy var refreshControl : UIRefreshControl = {
+        let refreshControl = UIRefreshControl(frame: .zero)
+        refreshControl.attributedTitle = .init(string: Strings.StoryListView.refreshingString)
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        return refreshControl
     }()
     
     private lazy var tableView : UITableView = {
@@ -43,10 +44,12 @@ final class StoryListViewController: UIViewController {
         return tableView
     }()
     
-    private lazy var emptyView : UIImageView = {
-        let emptyView = UIImageView(image: Layout.emptyState)
-        emptyView.contentMode = .scaleAspectFit
+    private lazy var emptyView : UILabel = {
+        let emptyView = UILabel(frame: .zero)
+        emptyView.text = Strings.CommonStrings.emptyState
+        emptyView.font = UIFont.systemFont(ofSize: emptyView.font.pointSize, weight: .heavy)
         emptyView.translatesAutoresizingMaskIntoConstraints = false
+        emptyView.isHidden = true
         return emptyView
     }()
     
@@ -62,17 +65,15 @@ final class StoryListViewController: UIViewController {
         self.presenter.viewDidAppear()
     }
     private func setupViews() {
+        self.title = Strings.StoryListView.pageTitle
         self.view.addSubview(tableView)
         self.view.addSubview(emptyView)
-        self.view.addSubview(loadingView)
-        self.emptyView.isHidden = true
-        self.tableView.isHidden = true
+        self.tableView.addSubview(refreshControl)
         self.setConstraints()
     }
     private func setConstraints() {
         setupEmptyState()
         setupTableView()
-        setupLoadingView()
     }
     
     private func setupEmptyState() {
@@ -90,13 +91,9 @@ final class StoryListViewController: UIViewController {
         let bottomConstraint = NSLayoutConstraint(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: .zero)
        view.addConstraints([leadingConstraint, topConstraint, trailingConstraint, bottomConstraint])
     }
-    
-    private func setupLoadingView() {
-        let horizontalConstraint = NSLayoutConstraint(item: loadingView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: .zero)
-        let verticalConstraint = NSLayoutConstraint(item: loadingView, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1, constant: .zero)
-        let widthConstraint = NSLayoutConstraint(item: loadingView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: Layout.emptyStateSize.width)
-        let heightConstraint = NSLayoutConstraint(item: loadingView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: Layout.emptyStateSize.height)
-       view.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+    @objc func refresh(_ sender: AnyObject) {
+        
+        self.presenter.pullToRefresh()
     }
 }
 
@@ -104,11 +101,11 @@ final class StoryListViewController: UIViewController {
 extension StoryListViewController: StoryListViewInterface {
     
     func startLoading() {
-        loadingView.startAnimating()
+        self.refreshControl.beginRefreshing()
     }
     
     func stopLoading() {
-        loadingView.stopAnimating()
+        self.refreshControl.endRefreshing()
     }
     
     func show(viewState: ViewState) {
@@ -130,11 +127,13 @@ extension StoryListViewController: UITableViewDataSource {
         return items.count
     }
     
+    //swiftlint:disable force_cast
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! StoryView
         cell.configuration = .init(viewModel: items[indexPath.row])
         return cell
     }
+    //swiftlint:enable force_cast
     
     func numberOfSections(in tableView: UITableView) -> Int {
         self.presenter.numberOfsection

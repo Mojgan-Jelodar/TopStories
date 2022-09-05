@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  TopStories
+
+  Created by Mozhgan on 9/5/22.
+  
+*/
+"PULL_TO_REFRESH" = "Pull to refresh";
+"STORIES_LIST_TITLE" = "Stories";
+"ALERT" = "Alert!!!";
+"OK" = "Ok";
+"THERE_IS_NO_ITEM_TO_DISPLAY" = "There is no item to show!!!";
