@@ -26,13 +26,17 @@ extension StoryListFormatter: StoryListFormatterInterface {
 }
 
 extension StoryListViewController {
-    enum ViewState {
+    enum ViewState : Equatable {
         case list([StoryCellViewModel])
         case emptyState
     }
 }
 
-struct StoryCellViewModel {
+struct StoryCellViewModel: Equatable {
+    static func == (lhs: StoryCellViewModel, rhs: StoryCellViewModel) -> Bool {
+        lhs.story == rhs.story
+    }
+    
     var title : String {
         story.title ?? ""
     }

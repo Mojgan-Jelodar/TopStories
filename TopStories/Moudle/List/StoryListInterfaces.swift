@@ -9,7 +9,7 @@
 //
 
 import UIKit
-enum StoryListDesination {
+enum StoryListDesination : Equatable {
     case detail(item : Story)
 }
 

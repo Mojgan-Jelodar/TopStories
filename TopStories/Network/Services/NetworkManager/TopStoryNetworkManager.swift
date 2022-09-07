@@ -8,48 +8,36 @@
 import Foundation
 import Combine
 final class TopStoryNetworkManager : TopStoryNetworkManagerProtocol {
+    
     private var requestDispatcher : APIRequestDispatcher
     init(environment : EnvironmentProtocol,
          sessionConfiguration : URLSessionConfiguration,
          queue : OperationQueue) {
         requestDispatcher =  APIRequestDispatcher(environment: APIEnvironment.development,
-                                                  networkSession: APINetworkSession(configuration: sessionConfiguration, delegateQueue:  queue))
+                                                  networkSession: APINetworkSession(session: .init(configuration: .default, delegate: nil, delegateQueue: queue)))
     }
     
-    func home(completionHandler :@escaping (Result<Stories,APIError>) -> Void) -> OperationProtocol {
-        let homeOperation = APIOperation(.api(request: TopStoriesEndpoint.home))
-        homeOperation.execute(in: requestDispatcher, completion: { operationResult in
-            guard case let .data(data) = operationResult else {
-                guard case let .error(error) = operationResult else {
+    func home(completionHandler :@escaping (Result<Stories,APIError>) -> Void) -> OperationProtocol? {
+        let homeOperation = APIOperation(TopStoriesEndpoint.home)
+        homeOperation.execute(in: requestDispatcher, completion: { [weak self] result in
+            guard case let .success(data) = result else {
+                guard case let .failure(error) = result else {
                     return
                 }
                 completionHandler( Result.failure(error))
                 return
             }
-            do {
-                // swiftlint:disable force_cast
-                let stories = try Stories(data: data as! Data)
-                // swiftlint:enable force_cast
-                completionHandler(Result.success(stories))
-            } catch let error {
-                completionHandler(.failure(APIError.parseError(error.localizedDescription)))
-            }
+            self?.map(data: data, completionHandler: completionHandler)
         })
         return homeOperation
     }
     
-    func downloadImage(url:URL, completionHandler : @escaping (Result<URL,APIError>) -> Void) -> OperationProtocol {
-        let downloadOperation = APIOperation(.download(request: URLRequest(url: url), progressHandler: nil))
-        downloadOperation.execute(in: requestDispatcher) { operationResult in
-            guard case let .file(fileUrl) = operationResult else {
-                guard case let .error(error) = operationResult else {
-                    return
-                }
-                completionHandler( Result.failure(error))
-                return
-            }
-            completionHandler(.success(fileUrl!))
+    private func map(data : Data,completionHandler :@escaping (Result<Stories,APIError>) -> Void) {
+        do {
+            let stories = try Stories(data: data)
+            completionHandler(Result.success(stories))
+        } catch let error {
+            completionHandler(.failure(APIError.parseError(error.localizedDescription)))
         }
-        return downloadOperation
     }
 }

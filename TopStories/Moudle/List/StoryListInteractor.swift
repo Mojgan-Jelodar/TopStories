@@ -33,6 +33,6 @@ final class StoryListInteractor : StoryListInteractorInterface {
                     result(.failure(error))
                 }
             }
-        }))
+        })!)
     }
 }

@@ -8,15 +8,15 @@
 import Foundation
 
 final class APIOperation: OperationProtocol {
-
+    
     /// The `URLSessionTask` to be executed/
-    private var task: URLSessionTask?
+    private var task: URLSessionDataTaskProtocol?
 
-    var requestType: RequestType
+    var requestType: RequestProtocol
 
     /// Designated initializer.
     /// - Parameter request: Instance conforming to the `RequestProtocol`.
-    init(_ request: RequestType) {
+    init(_ request: RequestProtocol) {
         self.requestType = request
     }
 
@@ -29,36 +29,15 @@ final class APIOperation: OperationProtocol {
     /// - Parameters:
     ///   - requestDispatcher: `RequestDispatcherProtocol` object that will execute the request.
     ///   - completion: Completion block.
-    func execute(in requestDispatcher: RequestDispatcherProtocol, completion: @escaping (OperationResult) -> Void) {
-        switch requestType {
-        case .api(let request):
-            task = requestDispatcher.execute(request: request, completion: { result in
-                switch result {
-                case .success(let value):
-                    completion(.data(value))
-                case .failure(let error):
-                    completion(.error(error))
-                }
-            })
-        case .download(let request,let progressHandler):
-            task = requestDispatcher.download(request: request, progressHandler: progressHandler, completion: { result in
-                switch result {
-                case .success(let url):
-                    completion(.file(url))
-                case .failure(let error):
-                    completion(.error(error))
-                }
-            })
-        case .upload(let url, let data, let progressHandler):
-            task = requestDispatcher.upload(request: .init(url: url), data: data, progressHandler: progressHandler, completion: { result in
-                switch result {
-                case .success(let value):
-                    completion(.data(value))
-                case .failure(let error):
-                    completion(.error(error))
-                }
-            })
-        }
-      
+    func execute(in requestDispatcher: RequestDispatcherProtocol,
+                 completion: @escaping (Result<Data,APIError>) -> Void) {
+        task = requestDispatcher.execute(request: self.requestType, completion: { result in
+            switch result {
+            case .success(let value):
+                completion(.success(value))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        })
     }
 }

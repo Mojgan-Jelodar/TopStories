@@ -31,9 +31,7 @@ final class ImageView: UIView {
                                        formatter: formatter)
     }()
     private lazy var interactor : ImageViewInteractor = {
-        let operationQueue = OperationQueue()
-        operationQueue.qualityOfService = .userInitiated
-        let networkSession = APINetworkSession(configuration: .default, delegateQueue: operationQueue)
+        let networkSession = APINetworkSession()
         return ImageViewInteractor(networkSession: networkSession)
     }()
     private lazy var formatter : ImageViewFormatter = {

@@ -7,7 +7,7 @@
 
 import Foundation
 /// Enum of API Errors
-enum APIError: Error {
+enum APIError: LocalizedError,Identifiable {
     case parameterEncodingFailed(reason: Reason)
     /// No data received from the server.
     case noData
@@ -21,6 +21,10 @@ enum APIError: Error {
     case parseError(String?)
     /// Unknown error.
     case unknown
+    
+    var id: String {
+        self.localizedDescription
+    }
 }
 enum Reason {
     case missingURL

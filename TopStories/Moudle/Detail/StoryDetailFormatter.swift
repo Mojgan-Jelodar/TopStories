@@ -19,7 +19,6 @@ extension StoryDetailFormatter: StoryDetailFormatterInterface {
     func format(story: Story) -> StoryViewModel {
         StoryViewModel(story: story)
     }
-    
 }
 struct StoryViewModel : CustomStringConvertible {
     var title : String {

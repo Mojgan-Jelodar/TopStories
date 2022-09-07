@@ -11,7 +11,7 @@ final class ImageViewInteractor : ImageViewInteractorInterface {
     deinit {
         task?.cancel()
     }
-    private var task : URLSessionDataTask?
+    private var task : URLSessionDataTaskProtocol?
     private var cache: NSCache<NSString, NSData> = .init()
     private let networkSession: APINetworkSession
     

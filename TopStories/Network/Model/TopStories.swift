@@ -5,7 +5,7 @@
 import Foundation
 
 // MARK: - Stories
-struct Stories: Decodable {
+struct Stories: Decodable,Equatable {
     let status, copyright, section: String?
     let lastUpdated: Date?
     let results: [Story]?
@@ -45,7 +45,7 @@ extension Stories {
 }
 
 // MARK: - Result
-struct Story: Decodable {
+struct Story: Decodable,Equatable {
     let section, subsection, title, abstract: String?
     let url: String?
     let multimedia: [Multimedia]?
@@ -69,6 +69,9 @@ struct Story: Decodable {
         multimedia = try container.decodeIfPresent([Multimedia].self, forKey: .multimedia)
         shortURL = try container.decodeIfPresent(String.self, forKey: .shortURL)
         updatedDate = try container.decodeIfPresent(Date.self, forKey: .updatedDate)
+    }
+    static func == (lhs: Story, rhs: Story) -> Bool {
+        lhs.title == rhs.title && lhs.abstract == rhs.abstract && lhs.section == rhs.section
     }
 }
 

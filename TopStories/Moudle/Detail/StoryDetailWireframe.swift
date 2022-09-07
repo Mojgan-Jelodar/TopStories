@@ -24,7 +24,6 @@ final class StoryDetailWireframe: BaseWireframe<StoryDetailViewController> {
         let presenter = StoryDetailPresenter(view: moduleViewController, formatter: formatter, interactor: interactor, wireframe: self)
         moduleViewController.presenter = presenter
     }
-
 }
 
 // MARK: - Extensions -
