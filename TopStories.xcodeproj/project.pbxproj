@@ -42,6 +42,11 @@
 		096CC93228BA930800E5CB69 /* TopStoriesEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC93128BA930800E5CB69 /* TopStoriesEndpoint.swift */; };
 		096CC93428BA973B00E5CB69 /* AppConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC93328BA973B00E5CB69 /* AppConstant.swift */; };
 		096CC93728BA9C8100E5CB69 /* TopStories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC93628BA9C8100E5CB69 /* TopStories.swift */; };
+		0990ECA028C91BE5009EA40D /* WebInterfaces.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0990EC9A28C91BE5009EA40D /* WebInterfaces.swift */; };
+		0990ECA128C91BE5009EA40D /* WebPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0990EC9B28C91BE5009EA40D /* WebPresenter.swift */; };
+		0990ECA228C91BE5009EA40D /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0990EC9C28C91BE5009EA40D /* WebViewController.swift */; };
+		0990ECA428C91BE5009EA40D /* WebInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0990EC9E28C91BE5009EA40D /* WebInteractor.swift */; };
+		0990ECA528C91BE5009EA40D /* WebWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0990EC9F28C91BE5009EA40D /* WebWireframe.swift */; };
 		099FAD0428BD6ED600A42F63 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FAD0328BD6ED600A42F63 /* Layout.swift */; };
 		099FAD0628BD717000A42F63 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FAD0528BD717000A42F63 /* StoryTableViewCell.swift */; };
 		09AA686C28BB5DD000F62816 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AA686B28BB5DD000F62816 /* ParameterEncoding.swift */; };
@@ -127,6 +132,11 @@
 		096CC93128BA930800E5CB69 /* TopStoriesEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopStoriesEndpoint.swift; sourceTree = "<group>"; };
 		096CC93328BA973B00E5CB69 /* AppConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstant.swift; sourceTree = "<group>"; };
 		096CC93628BA9C8100E5CB69 /* TopStories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopStories.swift; sourceTree = "<group>"; };
+		0990EC9A28C91BE5009EA40D /* WebInterfaces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebInterfaces.swift; sourceTree = "<group>"; };
+		0990EC9B28C91BE5009EA40D /* WebPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPresenter.swift; sourceTree = "<group>"; };
+		0990EC9C28C91BE5009EA40D /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		0990EC9E28C91BE5009EA40D /* WebInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebInteractor.swift; sourceTree = "<group>"; };
+		0990EC9F28C91BE5009EA40D /* WebWireframe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebWireframe.swift; sourceTree = "<group>"; };
 		099FAD0328BD6ED600A42F63 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		099FAD0528BD717000A42F63 /* StoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
 		09AA686B28BB5DD000F62816 /* ParameterEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterEncoding.swift; sourceTree = "<group>"; };
@@ -325,9 +335,22 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		0990EC9928C91B9F009EA40D /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				0990EC9A28C91BE5009EA40D /* WebInterfaces.swift */,
+				0990EC9B28C91BE5009EA40D /* WebPresenter.swift */,
+				0990EC9C28C91BE5009EA40D /* WebViewController.swift */,
+				0990EC9E28C91BE5009EA40D /* WebInteractor.swift */,
+				0990EC9F28C91BE5009EA40D /* WebWireframe.swift */,
+			);
+			path = WebView;
+			sourceTree = "<group>";
+		};
 		099FACE528BCD2E600A42F63 /* Moudle */ = {
 			isa = PBXGroup;
 			children = (
+				0990EC9928C91B9F009EA40D /* WebView */,
 				09C756CB28BEA21500BAF69F /* Base */,
 				09C756D828BEA24C00BAF69F /* List */,
 				09457C2828C61DC70073CE66 /* Detail */,
@@ -596,6 +619,7 @@
 				09C756D728BEA23500BAF69F /* InteractorInterface.swift in Sources */,
 				09C756D228BEA23500BAF69F /* BaseWireframe.swift in Sources */,
 				09457C1F28C5FB780073CE66 /* Strings.swift in Sources */,
+				0990ECA528C91BE5009EA40D /* WebWireframe.swift in Sources */,
 				096CC91D28BA890100E5CB69 /* EnvironmentProtocol.swift in Sources */,
 				099FAD0428BD6ED600A42F63 /* Layout.swift in Sources */,
 				096CC92128BA89C100E5CB69 /* NetworkSessionProtocol.swift in Sources */,
@@ -619,14 +643,17 @@
 				090B3E5328C39A2A000AA2A8 /* ImageViewProtocol.swift in Sources */,
 				096CC8EE28BA883A00E5CB69 /* ViewController.swift in Sources */,
 				09457C3328C61E130073CE66 /* StoryDetailInteractor.swift in Sources */,
+				0990ECA128C91BE5009EA40D /* WebPresenter.swift in Sources */,
 				090B3E5E28C3AC22000AA2A8 /* ImageViewInteractor.swift in Sources */,
 				09C756DF28BEA28000BAF69F /* StoryListInterfaces.swift in Sources */,
 				09AA688028BBDEFE00F62816 /* TopStoryNetworkManager.swift in Sources */,
 				090B3E5828C3A36F000AA2A8 /* ImageView.swift in Sources */,
+				0990ECA228C91BE5009EA40D /* WebViewController.swift in Sources */,
 				096CC91F28BA893600E5CB69 /* APIEnvironment.swift in Sources */,
 				09AA686C28BB5DD000F62816 /* ParameterEncoding.swift in Sources */,
 				09C756E828BEA4E200BAF69F /* APIOperation.swift in Sources */,
 				096CC92728BA8D1400E5CB69 /* RequestDispatcherProtocol.swift in Sources */,
+				0990ECA428C91BE5009EA40D /* WebInteractor.swift in Sources */,
 				096CC8EA28BA883A00E5CB69 /* AppDelegate.swift in Sources */,
 				09C756E028BEA28000BAF69F /* StoryListPresenter.swift in Sources */,
 				09457C3028C61E130073CE66 /* StoryDetailPresenter.swift in Sources */,
@@ -635,6 +662,7 @@
 				09AA687D28BBDE2100F62816 /* TopStoryNetworkManagerProtocol.swift in Sources */,
 				09457C3128C61E130073CE66 /* StoryDetailViewController.swift in Sources */,
 				096CC92D28BA8DEF00E5CB69 /* APIRequestDispatcher.swift in Sources */,
+				0990ECA028C91BE5009EA40D /* WebInterfaces.swift in Sources */,
 				090B3E5C28C3AA34000AA2A8 /* ImageViewFormatter.swift in Sources */,
 				096CC91B28BA887E00E5CB69 /* RequestProtocol.swift in Sources */,
 				09C756E928BEA4E200BAF69F /* OperationProtocol.swift in Sources */,

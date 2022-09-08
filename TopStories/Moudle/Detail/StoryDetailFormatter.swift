@@ -16,6 +16,13 @@ final class StoryDetailFormatter {
 // MARK: - Extensions -
 
 extension StoryDetailFormatter: StoryDetailFormatterInterface {
+    func makeRequest(url: String) -> URLRequest? {
+        guard let url = URL(string: url) else {
+            return nil
+        }
+        return .init(url: url)
+    }
+    
     func format(story: Story) -> StoryViewModel {
         StoryViewModel(story: story)
     }

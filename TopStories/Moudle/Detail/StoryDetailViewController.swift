@@ -11,7 +11,6 @@
 import UIKit
 fileprivate extension Layout {
     static let coverHeight = 0.5
-    static let multiplier = 1.0
 }
 
 final class StoryDetailViewController: UIViewController {
@@ -44,6 +43,14 @@ final class StoryDetailViewController: UIViewController {
         dateLabel.text = self.presenter.storyViewModel.date
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         return dateLabel
+    }()
+    
+    private lazy var showMoreButton : UIButton = {
+        let showMoreButton = UIButton()
+        showMoreButton.addTarget(self, action: #selector(moreInfoPressed), for: .touchUpInside)
+        showMoreButton.setTitle(Strings.StoryDetail.moreInfoTitle, for: .normal)
+        showMoreButton.contentHorizontalAlignment = .leading
+        return showMoreButton
     }()
     
     private lazy var contentViewStack : UIStackView = {
@@ -81,6 +88,10 @@ final class StoryDetailViewController: UIViewController {
         }
     }
     
+    @objc func moreInfoPressed() {
+        presenter.moreInfoPressed()
+    }
+    
     // MARK: - Setup View -
     private func setupViews() {
         self.title = Strings.StoryListView.pageTitle
@@ -89,6 +100,7 @@ final class StoryDetailViewController: UIViewController {
         self.contentViewStack.addArrangedSubview(titleLabel)
         self.contentViewStack.addArrangedSubview(dateLabel)
         self.contentViewStack.addArrangedSubview(decriptionLabel)
+        self.contentViewStack.addArrangedSubview(showMoreButton)
         self.setConstraints()
     }
     private func setConstraints() {

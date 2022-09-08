@@ -11,6 +11,7 @@
 import UIKit
 
 protocol StoryDetailWireframeInterface: WireframeInterface {
+    func present(request: URLRequest)
 }
 
 protocol StoryDetailViewInterface: ViewInterface {
@@ -18,10 +19,12 @@ protocol StoryDetailViewInterface: ViewInterface {
 
 protocol StoryDetailPresenterInterface: PresenterInterface {
     var storyViewModel : StoryViewModel { get }
+    func moreInfoPressed()
 }
 
 protocol StoryDetailFormatterInterface: FormatterInterface {
     func format(story: Story) -> StoryViewModel
+    func makeRequest(url : String) -> URLRequest?
 }
 
 protocol StoryDetailInteractorInterface: InteractorInterface {

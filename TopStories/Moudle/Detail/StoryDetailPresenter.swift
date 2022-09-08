@@ -40,4 +40,10 @@ extension StoryDetailPresenter: StoryDetailPresenterInterface {
     var storyViewModel: StoryViewModel {
         self.formatter.format(story: self.interactor.stroy)
     }
+    func moreInfoPressed() {
+        guard let request = self.formatter.makeRequest(url: self.storyViewModel.story.url ?? "") else {
+            return
+        }
+        wireframe.present(request: request)
+    }
 }

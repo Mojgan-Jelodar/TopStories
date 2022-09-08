@@ -12,6 +12,9 @@ extension Strings {
         static let pageTitle = "STORIES_LIST_TITLE".localiz()
         static let refreshingString = "PULL_TO_REFRESH".localiz()
     }
+    enum StoryDetail {
+        static let  moreInfoTitle = "MORE_INFO".localiz()
+    }
 
     enum CommonStrings {
         static let alertTitle = "ALERT".localiz()

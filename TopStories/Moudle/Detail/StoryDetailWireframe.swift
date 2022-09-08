@@ -29,4 +29,8 @@ final class StoryDetailWireframe: BaseWireframe<StoryDetailViewController> {
 // MARK: - Extensions -
 
 extension StoryDetailWireframe: StoryDetailWireframeInterface {
+    func present(request: URLRequest) {
+        self.viewController.presentWireframe(WebWireframe(urlRequest: request))
+    }
+    
 }

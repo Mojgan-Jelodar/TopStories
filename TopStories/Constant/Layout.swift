@@ -29,5 +29,7 @@ enum Layout {
     static let spacing16 = 16.0
 	static let spacing24 = 24.0
 	static let spacing28 = 28.0
+    
+    static let multiplier = 1.0
 
 }
