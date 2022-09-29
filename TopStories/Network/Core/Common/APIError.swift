@@ -8,6 +8,8 @@
 import Foundation
 /// Enum of API Errors
 enum APIError: LocalizedError,Identifiable {
+  
+    
     case parameterEncodingFailed(reason: Reason)
     /// No data received from the server.
     case noData

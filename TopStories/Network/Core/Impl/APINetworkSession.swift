@@ -22,10 +22,16 @@ final class APINetworkSession: NSObject {
 
     /// Dictionary containing associations of `ProgressAndCompletionHandlers` to `URLSessionTask` instances.
     private var taskToHandlersMap: [URLSessionTask: ProgressAndCompletionHandlers] = [:]
-    
-    public init(session: URLSession = URLSession.shared) {
+
+    /// Designated initializer.
+    /// - Parameters:
+    ///   - configuration: `URLSessionConfiguration` instance.
+    ///   - delegateQueue: `OperationQueue` instance for scheduling the delegate calls and completion handlers.
+    public init(configuration: URLSessionConfiguration, delegateQueue: OperationQueue) {
         super.init()
-        self.session = session
+        self.session = URLSession(configuration: configuration,
+                                  delegate: self,
+                                  delegateQueue: delegateQueue)
     }
 
     /// Associates a `URLSessionTask` instance with its `ProgressAndCompletionHandlers`
@@ -45,21 +51,21 @@ final class APINetworkSession: NSObject {
 
 }
 extension APINetworkSession: NetworkSessionProtocol {
-    func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTaskProtocol? {
+    func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask? {
         let dataTask = session.dataTask(with: request) { (data, response, error) in
             completionHandler(data, response, error)
         }
         return dataTask
     }
 
-    func downloadTask(request: URLRequest, progressHandler: ProgressHandler? = nil, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDataTaskProtocol? {
+    func downloadTask(request: URLRequest, progressHandler: ProgressHandler? = nil, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask? {
         let downloadTask = session.downloadTask(with: request)
         //  Remove the associated handlers.
         set(handlers: (progressHandler, completionHandler), for: downloadTask)
         return downloadTask
     }
 
-    func uploadTask(with request: URLRequest, from fileURL: URL, progressHandler: ProgressHandler? = nil, completion: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTaskProtocol? {
+    func uploadTask(with request: URLRequest, from fileURL: URL, progressHandler: ProgressHandler? = nil, completion: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionUploadTask? {
         let uploadTask = session.uploadTask(with: request, fromFile: fileURL, completionHandler: { (data, urlResponse, error) in
             completion(data, urlResponse, error)
         })
