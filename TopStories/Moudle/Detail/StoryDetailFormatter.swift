@@ -45,6 +45,12 @@ struct StoryViewModel : CustomStringConvertible {
         convertDateFormatter.dateFormat = "MMM dd yyyy h:mm a"
         return convertDateFormatter.string(from: updatedDate)
     }
+    var ratio : CGFloat {
+        guard let superJumbo = self.story.multimedia?.first(where: {$0.format == .superJumbo}) else {
+            return 1
+        }
+        return CGFloat(superJumbo.width ?? 1) / CGFloat(superJumbo.height ?? 1)
+    }
     
     let story : Story
     

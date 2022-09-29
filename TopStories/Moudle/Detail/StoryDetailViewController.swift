@@ -10,7 +10,8 @@
 
 import UIKit
 fileprivate extension Layout {
-    static let coverHeight = 0.5
+//    static let coverHeight = UIScreen.main.bounds.width * (coverSize.width / coverSize.height)
+//    static let minimumHeight = 120.0
 }
 
 final class StoryDetailViewController: UIViewController {
@@ -20,9 +21,17 @@ final class StoryDetailViewController: UIViewController {
     }
     
     // MARK: - Private properties -
+    
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
     private lazy var titleLabel : UILabel = {
         let titleLabel = UILabel()
-        titleLabel.font = .systemFont(ofSize: titleLabel.font.pointSize, weight: .heavy)
+        titleLabel.font = .systemFont(ofSize: titleLabel.font.pointSize, weight: .semibold)
         titleLabel.numberOfLines = .zero
         titleLabel.lineBreakMode = .byWordWrapping
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -69,9 +78,16 @@ final class StoryDetailViewController: UIViewController {
         let coverView = UIImageView()
         coverView.translatesAutoresizingMaskIntoConstraints = false
         coverView.backgroundColor = .lightGray
-        coverView.contentMode = .scaleAspectFill
+        coverView.contentMode = .scaleAspectFit
+        coverView.clipsToBounds = true
         coverView.loadImageFrom(urlString: self.presenter.storyViewModel.coverUrl ?? "")
         return coverView
+    }()
+    
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     // MARK: - Public properties -
@@ -101,31 +117,51 @@ final class StoryDetailViewController: UIViewController {
     // MARK: - Setup View -
     private func setupViews() {
         self.title = Strings.StoryListView.pageTitle
-        self.view.addSubview(contentViewStack)
-        self.contentViewStack.addArrangedSubview(coverView)
-        self.contentViewStack.addArrangedSubview(titleLabel)
-        self.contentViewStack.addArrangedSubview(dateLabel)
-        self.contentViewStack.addArrangedSubview(decriptionLabel)
-        self.contentViewStack.addArrangedSubview(showMoreButton)
-        self.setConstraints()
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(contentViewStack)
+        contentViewStack.addArrangedSubview(coverView)
+        contentViewStack.addArrangedSubview(titleLabel)
+        contentViewStack.addArrangedSubview(dateLabel)
+        contentViewStack.addArrangedSubview(decriptionLabel)
+        contentViewStack.addArrangedSubview(showMoreButton)
+        setConstraints(parent: view.safeAreaLayoutGuide)
     }
-    private func setConstraints() {
-        setupCoverViewConstraints()
-    }
-    
-    private func setupContentViewConstraints() {
-        let horizontalConstraint = NSLayoutConstraint(item: contentViewStack, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: Layout.multiplier, constant: .zero)
-        let verticalConstraint = NSLayoutConstraint(item: contentViewStack, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: Layout.multiplier, constant: .zero)
-        let trailingConstraint = NSLayoutConstraint(item: contentViewStack, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: Layout.multiplier, constant: .zero)
-        view.addConstraints([horizontalConstraint, verticalConstraint, trailingConstraint])
+    private func setConstraints(parent : UILayoutGuide) {
+        setupScrollViewConstraints(parent: parent)
+        setupContentViewConstraints(parent: scrollView)
+        setupStackViewConstraints(parent: contentView)
+        setupCoverViewConstraints(parent: contentViewStack)
     }
     
-    private func setupCoverViewConstraints() {
-        let widthConstraint = NSLayoutConstraint(item: coverView, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: Layout.multiplier, constant: .zero)
-        let heightConstraint = NSLayoutConstraint(item: coverView, attribute: .height, relatedBy: .equal, toItem: view, attribute: .height, multiplier: Layout.coverHeight, constant: .zero)
-        view.addConstraints([heightConstraint,widthConstraint])
+    private func setupScrollViewConstraints(parent : UILayoutGuide) {
+        scrollView.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
     }
     
+    private func setupContentViewConstraints(parent : UIView) {
+        contentView.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
+        contentView.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        contentView.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
+        contentView.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
+        contentView.widthAnchor.constraint(equalTo: parent.widthAnchor).isActive = true
+    }
+    
+    private func setupStackViewConstraints(parent : UIView) {
+        contentViewStack.topAnchor.constraint(equalTo: parent.topAnchor).isActive = true
+        contentViewStack.leadingAnchor.constraint(equalTo: parent.leadingAnchor).isActive = true
+        contentViewStack.trailingAnchor.constraint(equalTo: parent.trailingAnchor).isActive = true
+        contentViewStack.bottomAnchor.constraint(equalTo: parent.bottomAnchor).isActive = true
+    }
+    
+    private func setupCoverViewConstraints(parent : UIView) {
+        coverView.widthAnchor.constraint(equalTo: parent.widthAnchor).isActive = true
+        coverView.heightAnchor.constraint(equalTo: coverView.widthAnchor, multiplier: 1.0 / presenter.storyViewModel.ratio, constant: 0).isActive = true
+    }
+    
+  
 }
 
 // MARK: - Extensions -

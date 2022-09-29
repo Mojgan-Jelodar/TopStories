@@ -99,10 +99,11 @@ final class StoryListViewController: UIViewController {
     }
     
     private func setupTableView() {
-        let leadingConstraint = NSLayoutConstraint(item: tableView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: .zero)
-        let topConstraint = NSLayoutConstraint(item: tableView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: .zero)
-        let trailingConstraint = NSLayoutConstraint(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: .zero)
-        let bottomConstraint = NSLayoutConstraint(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: .zero)
+        let margins = view.layoutMarginsGuide
+        let leadingConstraint = NSLayoutConstraint(item: tableView, attribute: .leading, relatedBy: .equal, toItem: margins, attribute: .leading, multiplier: 1, constant: .zero)
+        let topConstraint = NSLayoutConstraint(item: tableView, attribute: .top, relatedBy: .equal, toItem: margins, attribute: .top, multiplier: 1, constant: .zero)
+        let trailingConstraint = NSLayoutConstraint(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: margins, attribute: .trailing, multiplier: 1, constant: .zero)
+        let bottomConstraint = NSLayoutConstraint(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: margins, attribute: .bottom, multiplier: 1, constant: .zero)
        view.addConstraints([leadingConstraint, topConstraint, trailingConstraint, bottomConstraint])
     }
     @objc func refresh(_ sender: AnyObject) {
