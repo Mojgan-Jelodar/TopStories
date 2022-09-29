@@ -29,39 +29,36 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
     /// - Parameters:
     ///   - request: Instance conforming to `RequestProtocol`
     ///   - completion: Completion handler.
-    func execute(request: RequestProtocol, completion: @escaping (Result<Data,APIError>) -> Void) -> URLSessionTask? {
-        do {
-            var urlRequest = request.urlRequest(with: environment)!
-            urlRequest =  try request.parameterEncoding.encode(urlRequest, with: request.parameters)
-            environment.headers?.forEach({ (key: String, value: String) in  urlRequest.addValue(value, forHTTPHeaderField: key) })
-            var task: URLSessionTask?
-            task = networkSession.dataTask(with: urlRequest, completionHandler: { [weak self] (data, urlResponse, error) in
-                guard let self = self,
-                      let urlResponse = urlResponse as? HTTPURLResponse else {
-                    completion(.failure(APIError.invalidResponse))
+    func execute(request: RequestProtocol, completion: @escaping (Result<Data,APIError>) -> Void) -> URLSessionTask {
+        var urlRequest = request.urlRequest(with: environment)!
+        let encodedRequest = try? request.parameterEncoding.encode(urlRequest, with: request.parameters)
+        urlRequest = encodedRequest != nil ? encodedRequest! : urlRequest
+        environment.headers?.forEach({ (key: String, value: String) in
+            urlRequest.addValue(value, forHTTPHeaderField: key)
+        })
+        let task = networkSession.dataTask(with: urlRequest, completionHandler: { [weak self] (data, urlResponse, error) in
+            guard let self = self,
+                  let urlResponse = urlResponse as? HTTPURLResponse else {
+                completion(.failure(APIError.invalidResponse))
+                return
+            }
+            let result = self.verify(data: data, urlResponse: urlResponse, error: error)
+            guard case let .success(response) = result else {
+                guard case let .failure(err) = result else {
                     return
                 }
-                let result = self.verify(data: data, urlResponse: urlResponse, error: error)
-                guard case let .success(response) = result else {
-                    guard case let .failure(err) = result else {
-                        return
-                    }
-                    completion(.failure(err))
-                    return
-                }
-                // swiftlint:disable force_cast
-                completion(.success(response as! Data))
-                // swiftlint:enable force_cast
-            })
-            task?.resume()
-            return task
-        } catch let error {
-            completion(.failure(APIError.badRequest(error.localizedDescription)))
-        }
-        return nil
+                completion(.failure(err))
+                return
+            }
+            // swiftlint:disable force_cast
+            completion(.success(response as! Data))
+            // swiftlint:enable force_cast
+        })
+        task.resume()
+        return task
     }
     
-    func download(request: URLRequest, progressHandler: ProgressHandler?, completion: @escaping (Result<URL, APIError>) -> Void) -> URLSessionTask? {
+    func download(request: URLRequest, progressHandler: ProgressHandler?, completion: @escaping (Result<URL, APIError>) -> Void) -> URLSessionTask {
         let task = networkSession.downloadTask(request: request, progressHandler: progressHandler) { [weak self]  fileUrl, urlResponse, error in
             guard let self = self,
                   let urlResponse = urlResponse as? HTTPURLResponse else {
@@ -80,11 +77,11 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
             completion(.success(url as! URL))
             // swiftlint:enable force_cast
         }
-        task?.resume()
+        task.resume()
         return task
     }
     
-    func upload(request: URLRequest, data: Data, progressHandler: ProgressHandler?, completion: @escaping (Result<Data, APIError>) -> Void) -> URLSessionTask? {
+    func upload(request: URLRequest, data: Data, progressHandler: ProgressHandler?, completion: @escaping (Result<Data, APIError>) -> Void) -> URLSessionTask {
         let task = networkSession.downloadTask(request: request, progressHandler: progressHandler) { [weak self] _, urlResponse, error in
             guard let self = self,
                   let urlResponse = urlResponse as? HTTPURLResponse else {
@@ -103,7 +100,7 @@ final class APIRequestDispatcher: RequestDispatcherProtocol {
             completion(.success(response as! Data))
             // swiftlint:enable force_cast
         }
-        task?.resume()
+        task.resume()
         return task
     }
 }

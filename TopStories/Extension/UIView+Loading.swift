@@ -6,24 +6,32 @@
 //
 
 import UIKit
+private let loadingTag = Int.max
 extension UIView {
-    fileprivate static let loadingTag = Int.max
+    
     func lock() {
-        guard viewWithTag(UIView.loadingTag) == nil else {
-            return
+        if let activityIndicatorView = viewWithTag(loadingTag) as? UIActivityIndicatorView {
+            activityIndicatorView.startAnimating()
+        } else {
+            let activityIndicatorView = UIActivityIndicatorView(style: .white)
+            activityIndicatorView.hidesWhenStopped = true
+            activityIndicatorView.tag = loadingTag
+            activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(activityIndicatorView)
+            addConstraints([.init(item: activityIndicatorView, attribute: .centerX,
+                                  relatedBy: .equal, toItem: self, attribute: .centerX,
+                                  multiplier: 1, constant: 0),
+                            .init(item: activityIndicatorView, attribute: .centerY,
+                                  relatedBy: .equal, toItem: self,
+                                  attribute: .centerY, multiplier: 1, constant: 0)])
+            activityIndicatorView.startAnimating()
         }
-        let activityIndicatorView = UIActivityIndicatorView(style: .white)
-        activityIndicatorView.hidesWhenStopped = true
-        activityIndicatorView.tag = UIView.loadingTag
-        addSubview(activityIndicatorView)
-        center = activityIndicatorView.center
-        activityIndicatorView.startAnimating()
+  
     }
-
+    
     func unlock() {
-        if let activityIndicatorView = viewWithTag(UIView.loadingTag) as? UIActivityIndicatorView {
+        if let activityIndicatorView = viewWithTag(loadingTag) as? UIActivityIndicatorView {
             activityIndicatorView.stopAnimating()
         }
     }
 }
-

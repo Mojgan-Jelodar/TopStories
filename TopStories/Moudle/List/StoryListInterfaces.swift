@@ -10,6 +10,13 @@
 
 import UIKit
 enum StoryListDesination : Equatable {
+    static func == (lhs: StoryListDesination, rhs: StoryListDesination) -> Bool {
+        switch (lhs,rhs) {
+        case (.detail(let lhsStory),.detail(let rhsStory)) :
+            return lhsStory == rhsStory
+        }
+    }
+    
     case detail(item : Story)
 }
 

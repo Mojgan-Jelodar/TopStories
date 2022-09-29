@@ -18,6 +18,10 @@ fileprivate extension Layout {
 
 final class StoryListViewController: UIViewController {
     
+    deinit {
+        print("deinit :: \(self)")
+    }
+    
     // MARK: - Private properties -
     let cellReuseIdentifier = "\(StoryTableViewCell.self)"
     private var items : [StoryCellViewModel] = [] {

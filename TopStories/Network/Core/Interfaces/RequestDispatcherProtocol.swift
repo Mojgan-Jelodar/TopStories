@@ -20,18 +20,18 @@ protocol RequestDispatcherProtocol {
     /// - Parameters:
     ///   - request: Instance conforming to `RequestProtocol`
     ///   - completion: Completion handler.
-    func execute(request: RequestProtocol, completion: @escaping (Result<Data,APIError>) -> Void) -> URLSessionTask?
+    func execute(request: RequestProtocol, completion: @escaping (Result<Data,APIError>) -> Void) -> URLSessionTask
     
     /// Executes a request.
     /// - Parameters:
     ///   - request: Instance conforming to `request`
     ///   - completion: Completion handler.
     
-    func download(request: URLRequest,progressHandler : ProgressHandler?, completion: @escaping (Result<URL,APIError>) -> Void) -> URLSessionTask?
+    func download(request: URLRequest,progressHandler : ProgressHandler?, completion: @escaping (Result<URL,APIError>) -> Void) -> URLSessionTask
     
     /// Executes a request.
     /// - Parameters:
     ///   - url: the path for upload file
     ///   - completion: Completion handler.
-    func upload(request: URLRequest, data : Data ,progressHandler : ProgressHandler?,completion: @escaping (Result<Data,APIError>) -> Void) -> URLSessionTask?
+    func upload(request: URLRequest, data : Data ,progressHandler : ProgressHandler?,completion: @escaping (Result<Data,APIError>) -> Void) -> URLSessionTask
 }

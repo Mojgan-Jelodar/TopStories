@@ -36,12 +36,12 @@ final class StoryListPresenterTests : XCTestCase {
     }
     
     func testViewDidLoad() {
-        topStoryNetworkManager.error = nil
-        self.subjectUnderTest.viewDidAppear()
+        topStoryNetworkManager.result = .success(.mock)
+        self.subjectUnderTest.pullToRefresh()
         guard case let .list(data) = self.view.viewState else {
           return
         }
-        XCTAssert(data.first?.story == Stories.mock.results?.first)
+        XCTAssert(data == Stories.mock.results?.map({.init(story: $0)}))
     }
     func testDidSelectItem() {
         let story = Stories.mock.results!.first!
@@ -49,17 +49,9 @@ final class StoryListPresenterTests : XCTestCase {
         XCTAssert(router.desination == StoryListDesination.detail(item: story))
     }
     
-    func testPullToRefresh() {
-        let story = Stories.mock.results!.first!
-        self.subjectUnderTest.pullToRefresh()
-        guard case let .list(data) = self.view.viewState else {
-          return
-        }
-        XCTAssert(data.first?.story == story)
-    }
     func testErrorOccurred() {
         let error = APIError.invalidResponse
-        topStoryNetworkManager.error = error
+        topStoryNetworkManager.result = .failure(error)
         subjectUnderTest.pullToRefresh()
         XCTAssert(router.messageIsPresented)
     }
@@ -73,19 +65,6 @@ fileprivate extension StoryListPresenterTests {
         
         func fetch(result: @escaping ((Result<Stories, APIError>) -> Void)) {
             _ = topStoryNetworkManager.home(completionHandler: result)
-        }
-    }
-}
-fileprivate extension StoryListPresenterTests {
-    final class MockTopStoryNetworkManager : TopStoryNetworkManagerProtocol {
-        var error : Error?
-        func home(completionHandler: @escaping (Result<Stories, APIError>) -> Void) -> OperationProtocol? {
-            guard let error = error else {
-                completionHandler(.success(Stories.mock))
-                return nil
-            }
-            completionHandler(.failure(APIError.serverError(error.localizedDescription)))
-            return nil
         }
     }
 }

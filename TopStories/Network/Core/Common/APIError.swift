@@ -7,8 +7,7 @@
 
 import Foundation
 /// Enum of API Errors
-enum APIError: LocalizedError,Identifiable {
-  
+enum APIError: LocalizedError,Identifiable,Equatable {
     
     case parameterEncodingFailed(reason: Reason)
     /// No data received from the server.
@@ -26,6 +25,22 @@ enum APIError: LocalizedError,Identifiable {
     
     var id: String {
         self.localizedDescription
+    }
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        switch (lhs,rhs) {
+        case (.noData,.noData),(.invalidResponse,.invalidResponse),(.unknown,.unknown):
+            return true
+        case (.badRequest(let lhs),.badRequest(let rhs)):
+            return rhs == lhs
+        case (.serverError(let lhs),.serverError(let rhs)):
+            return rhs == lhs
+        case (.parseError(let lhs),.parseError(let rhs)):
+            return rhs == lhs
+        case (.parameterEncodingFailed(let lhs),.parameterEncodingFailed(let rhs)):
+            return rhs == lhs
+        default:
+            return false
+        }
     }
 }
 enum Reason {

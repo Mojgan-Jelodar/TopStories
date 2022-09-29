@@ -21,116 +21,41 @@ final class StoryListInteractorTests : XCTestCase {
         subjectUnderTest = nil
         networkManager = nil
     }
-    func testFetch() {
+    func testSuccessedFetch() {
         let expectation = XCTestExpectation(description: "revoking api")
+        networkManager.result = .success(.mock)
         var stories : Stories?
         subjectUnderTest.fetch { result in
             switch result {
             case .success(let value):
                 stories = value
+                expectation.fulfill()
             case .failure(let error):
-                os_log(.error, "Failed loading the data : %@", error.localizedDescription)
+                XCTFail("Failed loading the data : \(error.localizedDescription)")
             }
-            expectation.fulfill()
+            
         }
         wait(for: [expectation], timeout: 1)
         XCTAssert(stories == Stories.mock)
     }
     
-}
-extension StoryListInteractorTests {
-    final class MockTopStoryNetworkManager :TopStoryNetworkManagerProtocol {
-        private lazy var requestDispatcher : MockRequestDispatcher = {
-            .init(environment: APIEnvironment.production,
-                  networkSession: MockNetworkSession())
-        }()
-        func home(completionHandler: @escaping (Result<Stories, APIError>) -> Void) -> OperationProtocol? {
-            let operation = MockOperation(TopStoriesEndpoint.home)
-            operation.execute(in: requestDispatcher) { result in
-                switch result {
-                case .success(let data):
-                    // swiftlint:disable force_try
-                    completionHandler(.success(try! .init(data: data)))
-                case .failure(let error):
-                    completionHandler(.failure(error))
-                }
+    func testFailedFetch() {
+        let expectation = XCTestExpectation(description: "revoking api")
+        let error = APIError.invalidResponse
+        var apiError : APIError?
+        networkManager.result = .failure(error)
+        subjectUnderTest.fetch { result in
+            switch result {
+            case .success:
+                XCTFail("Unexpected result...")
+            case .failure(let error):
+                apiError = error
+                expectation.fulfill()
+                
             }
-            return operation
+            
         }
-    }
-}
-extension StoryListInteractorTests {
-    final class MockOperation: OperationProtocol {
-        
-        private var task: URLSessionDataTaskProtocol?
-        
-        var requestType: RequestProtocol
-        
-        init(_ request: RequestProtocol) {
-            self.requestType = request
-        }
-        
-        /// Cancels the operation and the encapsulated task.
-        func cancel() {
-            task?.cancel()
-        }
-        
-        func execute(in requestDispatcher: RequestDispatcherProtocol,
-                     completion: @escaping (Result<Data,APIError>) -> Void) {
-            self.task =  requestDispatcher.execute(request: requestType) { result in
-                switch result {
-                case .success(let data):
-                    completion(.success(data))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-    
-}
-
-extension StoryListInteractorTests {
-    final class MockRequestDispatcher : RequestDispatcherProtocol {
-        let environment: EnvironmentProtocol
-        let networkSession: NetworkSessionProtocol
-        init(environment: EnvironmentProtocol, networkSession: NetworkSessionProtocol) {
-            self.networkSession = networkSession
-            self.environment = environment
-        }
-        
-        func execute(request: RequestProtocol, completion: @escaping (Result<Data, APIError>) -> Void) -> URLSessionDataTaskProtocol? {
-            let urlRequest = request.urlRequest(with: self.environment)!
-            return networkSession.dataTask(with: urlRequest) { data, _, error in
-                guard let data = data else {
-                    completion(.failure(.serverError(error?.localizedDescription ?? "")))
-                    return
-                }
-                completion(.success(data))
-            }
-        }
-    }
-}
-
-fileprivate extension StoryListInteractorTests {
-    final class MockNetworkSession : NetworkSessionProtocol {
-
-        func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTaskProtocol? {
-            let session = URLSessionMock()
-            session.data = Stories.data
-            let task = session.dataTask(with: request) { data, response, error in
-                completionHandler(data,response,error)
-            }
-            task.resume()
-            return task
-        }
-
-        func downloadTask(request: URLRequest, progressHandler: ProgressHandler?, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDataTaskProtocol? {
-            return nil
-        }
-
-        func uploadTask(with request: URLRequest, from fileURL: URL, progressHandler: ProgressHandler?, completion: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTaskProtocol? {
-            return nil
-        }
+        wait(for: [expectation], timeout: 1)
+        XCTAssert(error == apiError)
     }
 }

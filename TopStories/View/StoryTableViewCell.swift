@@ -27,9 +27,11 @@ final class StoryTableViewCell: UITableViewCell {
         return headerLabel
     }()
     
-    private lazy var iconView : ImageView = {
-        let imageView = ImageView()
-        return imageView
+    private lazy var iconView : UIImageView = {
+        let iconView = UIImageView()
+        iconView.contentMode = .scaleAspectFit
+        iconView.backgroundColor = .lightGray
+        return iconView
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -74,7 +76,8 @@ final class StoryTableViewCell: UITableViewCell {
     
     private func setUpConfiguration() {
         self.titleLabel.text = configuration?.viewModel.title
-        self.iconView.downLoadImage(url: configuration?.viewModel.largeThumbnailUrl ?? "")
+        guard let largeThumbnailUrl = configuration?.viewModel.largeThumbnailUrl else { return  }
+        self.iconView.loadImageFrom(urlString: largeThumbnailUrl)
     }
 }
 extension StoryTableViewCell {

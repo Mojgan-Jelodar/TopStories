@@ -6,3 +6,11 @@
 //
 
 import Foundation
+@testable import TopStories
+
+final class MockTopStoryNetworkManager : TopStoryNetworkManagerProtocol {
+    var result : Result<TopStories.Stories, TopStories.APIError>!
+    func home(completionHandler: @escaping (Result<TopStories.Stories, TopStories.APIError>) -> Void) {
+        completionHandler(result)
+    }
+}

@@ -8,5 +8,5 @@
 import Foundation
 
 protocol TopStoryNetworkManagerProtocol {
-    func home(completionHandler :@escaping (Result<Stories,APIError>) -> Void) -> OperationProtocol
+    func home(completionHandler :@escaping (Result<Stories,APIError>) -> Void)
 }
