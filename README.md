@@ -15,7 +15,7 @@ This is an application which loads a list of top stories. In addition, When a us
 - Swift 5.0
 
 # App Version
-- 1.0.1 
+- 1.0.0 
 # Design Pattern Used
 
 ## VIPER
