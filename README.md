@@ -3,15 +3,13 @@ This is an application which loads a list of top stories. In addition, When a us
 
 
 # Requirement
-- XCode 13.4.1
-- macOS Monterey 12.4.0
+- XCode 14.0
+- macOS Monterey 12.6.0
 
 # Installation
 ## To run the project :
 
 - Open TopStories.xcodeproj
-- Let SPM resolve the dependencies
-- Then Run
 
 # Language used 
 - Swift 5.0
@@ -47,13 +45,13 @@ Viper is a design pattern that implements ‘separation of concern’ paradigm. 
 
 # Assumptions        
 -   The app is designed for iPhones and iPad.        
--   Mobile and iPad platform supported: iOS (14.x,15.x)        
+-   Mobile and iPad platform supported: iOS (12+)        
 -   Device support : iPhone , iPad  
 
 
 # Unit Test
 * Test the behaviour, not the internal implementation
-* Test Modules
+
 
 
 
