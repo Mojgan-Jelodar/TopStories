@@ -24,11 +24,6 @@ final class StoryListViewController: UIViewController {
     
     // MARK: - Private properties -
     let cellReuseIdentifier = "\(StoryTableViewCell.self)"
-    private var items : [StoryCellViewModel] = [] {
-        didSet {
-            tableView.reloadData()
-        }
-    }
     
     private lazy var refreshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl(frame: .zero)
@@ -108,6 +103,20 @@ final class StoryListViewController: UIViewController {
     }
     @objc func refresh(_ sender: AnyObject) {
         self.presenter.pullToRefresh()
+        
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reloadVisibleCellsIfNeeded()
+    }
+    private func reloadVisibleCellsIfNeeded() {
+        guard self.tableView.window != nil,
+              let indexPathsForVisibleRows = self.tableView.indexPathsForVisibleRows ,
+              indexPathsForVisibleRows.count > 0 else {
+            self.tableView.reloadData()
+            return
+        }
+        self.tableView.reloadRows(at: indexPathsForVisibleRows, with: .none)
     }
 }
 
@@ -124,27 +133,29 @@ extension StoryListViewController: StoryListViewInterface {
     
     func show(viewState: ViewState) {
         switch viewState {
-        case .list(let array):
+        case .loaded:
             tableView.isHidden = false
             emptyView.isHidden = true
-            items = array
+            self.tableView.reloadData()
         case .emptyState:
             tableView.isHidden = true
             emptyView.isHidden = false
         }
     }
+    
+   
 }
 
 // MARK: - Extensions - UITableViewDataSource
 extension StoryListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return self.presenter.numberOfRows
     }
     
     //swiftlint:disable force_cast
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! StoryTableViewCell
-        cell.configuration = .init(viewModel: items[indexPath.row])
+        cell.configuration = .init(viewModel: self.presenter.rowFor(idx: indexPath.row))
         return cell
     }
     //swiftlint:enable force_cast
@@ -156,7 +167,7 @@ extension StoryListViewController: UITableViewDataSource {
 // MARK: - Extensions - UITableViewDelegate
 extension StoryListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.presenter.didSelect(viewModel: self.items[indexPath.row])
+        self.presenter.didSelect(idx: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

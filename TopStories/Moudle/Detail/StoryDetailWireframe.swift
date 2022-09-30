@@ -17,12 +17,18 @@ final class StoryDetailWireframe: BaseWireframe<StoryDetailViewController> {
 
     // MARK: - Module setup -
 
-    init(story : Story) {
+    init(story : Story,
+         isBookmarked : Bool,
+         moudleDelegate : StoryDetailMoudleDelegate) {
         let moduleViewController = StoryDetailViewController(nibName: nil, bundle: nil)
         super.init(viewController: moduleViewController)
         let formatter = StoryDetailFormatter()
-        let interactor = StoryDetailInteractor(story: story)
-        let presenter = StoryDetailPresenter(view: moduleViewController, formatter: formatter, interactor: interactor, wireframe: self)
+        let interactor = StoryDetailInteractor(story: story, isBookMarked: isBookmarked)
+        let presenter = StoryDetailPresenter(view: moduleViewController,
+                                             formatter: formatter,
+                                             interactor: interactor,
+                                             wireframe: self,
+                                             moudleDelegate: moudleDelegate)
         moduleViewController.presenter = presenter
     }
 }

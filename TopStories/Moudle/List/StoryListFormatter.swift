@@ -16,40 +16,33 @@ final class StoryListFormatter {
 // MARK: - Extensions -
 
 extension StoryListFormatter: StoryListFormatterInterface {
-    func format(stories: Stories) -> StoryListViewController.ViewState {
-        guard let results = stories.results,!results.isEmpty else {
-            return .emptyState
-        }
-        return .list(results.map({StoryCellViewModel.init(story: $0)}))
+    func format(story: Story,isBookmarked : Bool) -> StoryCellViewModel {
+        return StoryCellViewModel(title: story.title ?? "",
+                                  largeThumbnailUrl: thumbail(story: story),
+                                  isBookmarked: isBookmarked)
     }
     
+    private func thumbail(story : Story) -> Multimedia? {
+        guard let largeThumbnail = story.multimedia?.first(where: {$0.format == .largeThumbnail}) else {
+            return nil
+        }
+        return largeThumbnail
+    }
 }
 
 extension StoryListViewController {
     enum ViewState : Equatable {
-        case list([StoryCellViewModel])
+        case loaded
         case emptyState
     }
 }
 
 struct StoryCellViewModel: Equatable {
     static func == (lhs: StoryCellViewModel, rhs: StoryCellViewModel) -> Bool {
-        lhs.story == rhs.story
+        lhs.title == rhs.title
     }
     
-    var title : String {
-        story.title ?? ""
-    }
-    var largeThumbnailUrl : String? {
-        guard let largeThumbnail = self.story.multimedia?.first(where: {$0.format == .largeThumbnail}) else {
-            return nil
-        }
-        return largeThumbnail.url
-    }
-    
-    let story : Story
-    
-    init(story : Story) {
-        self.story = story
-    }
+    let title : String
+    let largeThumbnailUrl : Multimedia?
+    let isBookmarked : Bool
 }

@@ -27,6 +27,13 @@ final class StoryTableViewCell: UITableViewCell {
         return headerLabel
     }()
     
+    private lazy var bookMarkLabel : UILabel = {
+        let bookMarkLabel = UILabel()
+        bookMarkLabel.font = .systemFont(ofSize: bookMarkLabel.font.pointSize, weight: .heavy)
+        bookMarkLabel.text = "🔖"
+        return bookMarkLabel
+    }()
+    
     private lazy var iconView : UIImageView = {
         let iconView = UIImageView()
         iconView.contentMode = .scaleAspectFit
@@ -46,6 +53,7 @@ final class StoryTableViewCell: UITableViewCell {
     private func setUpViews() {
         self.setupIconView()
         self.setupTitleLabel()
+        self.setupbookMarkLabel()
     }
     
     private func setupTitleLabel() {
@@ -53,7 +61,7 @@ final class StoryTableViewCell: UITableViewCell {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         let leadingConstraint = NSLayoutConstraint(item: titleLabel, attribute: .leading, relatedBy: .equal, toItem: iconView, attribute: .trailing
                                                    , multiplier: 1, constant: Layout.padding8)
-        let tarilingConstraint = NSLayoutConstraint(item: titleLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -Layout.padding8)
+        let tarilingConstraint = NSLayoutConstraint(item: titleLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -Layout.padding48)
         let topConstraint = NSLayoutConstraint(item: titleLabel, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: Layout.padding8)
         let bottomConstraint = NSLayoutConstraint(item: titleLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -Layout.padding8)
         let heightConstraint = NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: iconView, attribute: .height, multiplier: 1, constant: -Layout.padding8)
@@ -74,10 +82,23 @@ final class StoryTableViewCell: UITableViewCell {
         addConstraints([ widthConstraint, heightConstraint,leadingConstraint,verticalConstraint])
     }
     
+    private func setupbookMarkLabel() {
+        addSubview(bookMarkLabel)
+        bookMarkLabel.translatesAutoresizingMaskIntoConstraints = false
+        let topConstraint = NSLayoutConstraint(item: bookMarkLabel, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: Layout.padding8)
+        let bottomConstraint = NSLayoutConstraint(item: bookMarkLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -Layout.padding8)
+        let tarilingConstraint = NSLayoutConstraint(item: bookMarkLabel, attribute: .leading, relatedBy: .equal, toItem: titleLabel, attribute: .trailing, multiplier: 1, constant: Layout.padding16)
+        let leadingConstraint = NSLayoutConstraint(item: bookMarkLabel, attribute: .trailing, relatedBy: .equal,
+                                                   toItem: self, attribute: .trailing, multiplier: 1, constant: -Layout.padding8)
+        addConstraints([ topConstraint,bottomConstraint, tarilingConstraint,leadingConstraint])
+    }
+    
     private func setUpConfiguration() {
         self.titleLabel.text = configuration?.viewModel.title
-        guard let largeThumbnailUrl = configuration?.viewModel.largeThumbnailUrl else { return  }
+        self.bookMarkLabel.isHidden = !(configuration?.viewModel.isBookmarked ?? false)
+        guard let largeThumbnailUrl = configuration?.viewModel.largeThumbnailUrl?.url else { return  }
         self.iconView.loadImageFrom(urlString: largeThumbnailUrl)
+        
     }
 }
 extension StoryTableViewCell {

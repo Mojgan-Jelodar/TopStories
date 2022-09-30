@@ -11,8 +11,14 @@
 import Foundation
 
 final class StoryDetailInteractor : StoryDetailInteractorInterface {
+    var isBookMarked: Bool
     var stroy: Story
-    init(story : Story) {
+    init(story : Story,
+         isBookMarked: Bool) {
         self.stroy = story
+        self.isBookMarked = isBookMarked
+    }
+    func toggleBookmark() {
+        isBookMarked = !isBookMarked
     }
 }

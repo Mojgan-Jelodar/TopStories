@@ -11,19 +11,23 @@
 import Foundation
 
 final class StoryListPresenter : StoryListPresenterInterface {
+    
     // MARK: - Public properties -
     var numberOfsection: Int {
         1
     }
+    var numberOfRows: Int = 0
     // MARK: - Private properties -
-
+    
     private unowned let view: StoryListViewInterface
+    
     private let formatter: StoryListFormatterInterface
     private let interactor: StoryListInteractorInterface
     private let wireframe: StoryListWireframeInterface
-
+    
+    
     // MARK: - Lifecycle -
-
+    
     init(
         view: StoryListViewInterface,
         formatter: StoryListFormatterInterface,
@@ -43,17 +47,32 @@ final class StoryListPresenter : StoryListPresenterInterface {
             self.view.stopLoading()
             switch result {
             case .success(let value):
-                self.view.show(viewState: self.formatter.format(stories: value))
+                self.numberOfRows = value.results?.count ?? .zero
+                self.view.show(viewState: value.results?.isEmpty ?? true ? .emptyState : .loaded)
             case .failure(let error):
                 self.wireframe.present(message: error.localizedDescription)
             }
         }
     }
-    
-    func didSelect(viewModel: StoryCellViewModel) {
-        self.wireframe.routeTo(desination: .detail(item: viewModel.story))
+    func didSelect(idx: Int) {
+        let story = interactor.item(for: idx)
+        let isBookmarked = interactor.isBookmarked(url: story.url ?? "")
+        self.wireframe.routeTo(desination: .detail(delegate: self,
+                                                   item: story,
+                                                   isBookmarked: isBookmarked))
     }
     func pullToRefresh() {
         self.viewDidAppear()
+    }
+    func rowFor(idx: Int) -> StoryCellViewModel {
+        let story = interactor.item(for: idx)
+        let isBookmarked = interactor.isBookmarked(url: story.url ?? "")
+        return self.formatter.format(story: story, isBookmarked: isBookmarked)
+    }
+}
+
+extension StoryListPresenter : StoryDetailMoudleDelegate {
+    func isBookmarked(url: String, value: Bool) {
+        self.interactor.didChangedBookmarked(url: url, value: value)
     }
 }

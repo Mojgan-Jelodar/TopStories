@@ -12,12 +12,12 @@ import UIKit
 enum StoryListDesination : Equatable {
     static func == (lhs: StoryListDesination, rhs: StoryListDesination) -> Bool {
         switch (lhs,rhs) {
-        case (.detail(let lhsStory),.detail(let rhsStory)) :
+        case (.detail(_,let lhsStory,_),.detail(let rhsDelegate,let rhsStory,_)) :
             return lhsStory == rhsStory
         }
     }
     
-    case detail(item : Story)
+    case detail(delegate : StoryDetailMoudleDelegate, item : Story,isBookmarked : Bool)
 }
 
 protocol StoryListWireframeInterface: WireframeInterface {
@@ -33,13 +33,15 @@ protocol StoryListViewInterface: ViewInterface {
 
 protocol StoryListPresenterInterface: PresenterInterface {
     var numberOfsection : Int { get }
+    var numberOfRows : Int { get }
     func viewDidAppear()
-    func didSelect(viewModel: StoryCellViewModel)
+    func didSelect(idx: Int)
+    func rowFor(idx: Int) -> StoryCellViewModel
     func pullToRefresh()
 }
 
 protocol StoryListFormatterInterface: FormatterInterface {
-    func format(stories : Stories) -> StoryListViewController.ViewState
+    func format(story: Story,isBookmarked : Bool) -> StoryCellViewModel
 }
 
 protocol StoryListInteractorInterface: InteractorInterface {
@@ -47,4 +49,7 @@ protocol StoryListInteractorInterface: InteractorInterface {
     init(worker : TopStoryNetworkManagerProtocol)
     
     func fetch(result: @escaping ((Result<Stories, APIError>) -> Void))
+    func didChangedBookmarked(url : String,value : Bool)
+    func isBookmarked(url : String) -> Bool
+    func item(for index : Int) -> Story
 }

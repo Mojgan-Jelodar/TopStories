@@ -27,7 +27,10 @@ final class StoryListWireframe: BaseWireframe<StoryListViewController> {
         super.init(viewController: moduleViewController)
         let formatter = StoryListFormatter()
         let interactor = StoryListInteractor(worker: TopStoryNetworkManager(environment: APIEnvironment.production, sessionConfiguration: .default, queue: operationQueue))
-        let presenter = StoryListPresenter(view: moduleViewController, formatter: formatter, interactor: interactor, wireframe: self)
+        let presenter = StoryListPresenter(view: moduleViewController,
+                                           formatter: formatter,
+                                           interactor: interactor,
+                                           wireframe: self)
         moduleViewController.presenter = presenter
     }
     
@@ -38,8 +41,10 @@ final class StoryListWireframe: BaseWireframe<StoryListViewController> {
 extension StoryListWireframe: StoryListWireframeInterface {
     func routeTo(desination: StoryListDesination) {
         switch desination {
-        case .detail(let item):
-            let wireframe = StoryDetailWireframe(story: item)
+        case .detail(let delegate, let item,let isBookmarked) :
+            let wireframe = StoryDetailWireframe(story: item,
+                                                 isBookmarked: isBookmarked,
+                                                 moudleDelegate: delegate)
             self.navigationController?.pushWireframe(wireframe)
         }
     }

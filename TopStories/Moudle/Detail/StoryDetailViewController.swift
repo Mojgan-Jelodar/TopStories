@@ -9,10 +9,6 @@
 //
 
 import UIKit
-fileprivate extension Layout {
-//    static let coverHeight = UIScreen.main.bounds.width * (coverSize.width / coverSize.height)
-//    static let minimumHeight = 120.0
-}
 
 final class StoryDetailViewController: UIViewController {
     
@@ -80,7 +76,7 @@ final class StoryDetailViewController: UIViewController {
         coverView.backgroundColor = .lightGray
         coverView.contentMode = .scaleAspectFit
         coverView.clipsToBounds = true
-        coverView.loadImageFrom(urlString: self.presenter.storyViewModel.coverUrl ?? "")
+        coverView.loadImageFrom(urlString: self.presenter.storyViewModel.cover?.url ?? "")
         return coverView
     }()
     
@@ -89,6 +85,18 @@ final class StoryDetailViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    private lazy var bookMarkButton : UIBarButtonItem =  {
+        let bookMarkButton = UIBarButtonItem(barButtonSystemItem: .bookmarks,
+                                             target: self,
+                                             action: #selector(bookmarkTapped))
+        bookMarkButton.tintColor = presenter.storyViewModel.isBookmarked ? .red : .blue
+        return bookMarkButton
+    }()
+    
+    @objc func bookmarkTapped() {
+        presenter.bookmark()
+    }
     
     // MARK: - Public properties -
     
@@ -117,6 +125,7 @@ final class StoryDetailViewController: UIViewController {
     // MARK: - Setup View -
     private func setupViews() {
         self.title = Strings.StoryListView.pageTitle
+        self.navigationItem.rightBarButtonItem = self.bookMarkButton
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(contentViewStack)
@@ -158,13 +167,14 @@ final class StoryDetailViewController: UIViewController {
     
     private func setupCoverViewConstraints(parent : UIView) {
         coverView.widthAnchor.constraint(equalTo: parent.widthAnchor).isActive = true
-        coverView.heightAnchor.constraint(equalTo: coverView.widthAnchor, multiplier: 1.0 / presenter.storyViewModel.ratio, constant: 0).isActive = true
+        coverView.heightAnchor.constraint(equalTo: coverView.widthAnchor, multiplier: 1.0 / (presenter.storyViewModel.cover?.ratio ?? 1),
+                                          constant: 0).isActive = true
     }
-    
-  
 }
-
 // MARK: - Extensions -
 
 extension StoryDetailViewController: StoryDetailViewInterface {
+    func didChangedBookmarked() {
+        bookMarkButton.tintColor = presenter.storyViewModel.isBookmarked ? .red : .blue
+    }
 }

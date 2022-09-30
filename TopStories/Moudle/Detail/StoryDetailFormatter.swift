@@ -22,39 +22,62 @@ extension StoryDetailFormatter: StoryDetailFormatterInterface {
         return url
     }
     
-    func format(story: Story) -> StoryViewModel {
-        StoryViewModel(story: story)
+    func format(story: Story,isBookmarked : Bool) -> StoryViewModel {
+        .init(title: story.title ?? "",
+              description: story.abstract ?? "",
+              cover: coverImage(story: story),
+              date: dateString(date: story.updatedDate),
+              url : story.url!,
+              isBookMarked: isBookmarked)
+    }
+    
+    private func dateString(date : Date?) -> String {
+        guard let date = date else { return "" }
+        let convertDateFormatter = DateFormatter()
+        convertDateFormatter.dateFormat = "MMM dd yyyy h:mm "
+        return convertDateFormatter.string(from: date)
+    }
+    
+    private func coverImage(story : Story) -> Multimedia? {
+        return story.multimedia?.first(where: {$0.format == .superJumbo})
+    }
+    
+    private func largeThumbnail(story : Story) -> Multimedia? {
+        return story.multimedia?.first(where: {$0.format == .largeThumbnail})
     }
 }
-struct StoryViewModel : CustomStringConvertible {
-    var title : String {
-        story.title ?? ""
-    }
-    var description: String {
-        story.abstract ?? ""
-    }
-    var coverUrl : String? {
-        guard let superJumbo = self.story.multimedia?.first(where: {$0.format == .superJumbo}) else {
-            return nil
-        }
-        return  superJumbo.url
-    }
-    var date : String {
-        guard let updatedDate = story.updatedDate else { return "" }
-        let convertDateFormatter = DateFormatter()
-        convertDateFormatter.dateFormat = "MMM dd yyyy h:mm a"
-        return convertDateFormatter.string(from: updatedDate)
-    }
-    var ratio : CGFloat {
-        guard let superJumbo = self.story.multimedia?.first(where: {$0.format == .superJumbo}) else {
-            return 1
-        }
-        return CGFloat(superJumbo.width ?? 1) / CGFloat(superJumbo.height ?? 1)
+struct StoryViewModel : CustomStringConvertible,Equatable {
+    let title : String
+    let description: String
+    let cover : Multimedia?
+    let date : String?
+    let url : String
+    private var _isBookmarked : Bool
+    
+    var isBookmarked : Bool {
+        _isBookmarked
     }
     
-    let story : Story
+    mutating func toggleBookmark() {
+        _isBookmarked = !_isBookmarked
+    }
     
-    init(story : Story) {
-        self.story = story
+    init(title : String,
+         description : String,
+         cover: Multimedia?,
+         date : String,
+         url : String,
+         isBookMarked : Bool) {
+        self.title = title
+        self.description = description
+        self.cover = cover
+        self.date = date
+        self.url = url
+        self._isBookmarked = isBookMarked
+        
+    }
+    
+    static func == (lhs: StoryViewModel, rhs: StoryViewModel) -> Bool {
+        lhs.url == rhs.url
     }
 }

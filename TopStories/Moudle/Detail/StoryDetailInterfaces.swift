@@ -10,23 +10,31 @@
 
 import UIKit
 
+protocol StoryDetailMoudleDelegate: WireframeInterface {
+    func isBookmarked(url: String,value : Bool)
+}
 protocol StoryDetailWireframeInterface: WireframeInterface {
     func present(url: URL)
 }
 
 protocol StoryDetailViewInterface: ViewInterface {
+    func didChangedBookmarked()
 }
 
 protocol StoryDetailPresenterInterface: PresenterInterface {
     var storyViewModel : StoryViewModel { get }
     func moreInfoPressed()
+    func bookmark()
 }
 
 protocol StoryDetailFormatterInterface: FormatterInterface {
-    func format(story: Story) -> StoryViewModel
     func make(url : String) -> URL?
+    func format(story: Story,isBookmarked : Bool) -> StoryViewModel
 }
 
 protocol StoryDetailInteractorInterface: InteractorInterface {
     var stroy : Story { get }
+    var isBookMarked : Bool { get }
+    func toggleBookmark()
+    
 }

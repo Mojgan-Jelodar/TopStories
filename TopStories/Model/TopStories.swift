@@ -51,7 +51,7 @@ struct Story: Decodable,Equatable {
     let multimedia: [Multimedia]?
     let shortURL: String?
     let updatedDate : Date?
-
+    
     enum CodingKeys: String, CodingKey {
         case section, subsection, title, abstract, url, uri, byline
         case itemType = "item_type"
@@ -59,6 +59,7 @@ struct Story: Decodable,Equatable {
         case kicker, multimedia
         case shortURL = "short_url"
     }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         section = try container.decodeIfPresent(String.self, forKey: .section)
@@ -79,7 +80,7 @@ struct Story: Decodable,Equatable {
 struct Multimedia: Decodable {
     let url: String?
     let format: ImageFormat?
-    let height, width: Int?
+    let height, width: Int
     
     enum CodingKeys: String, CodingKey {
         case url, format, height, width
@@ -88,8 +89,11 @@ struct Multimedia: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         url = try container.decodeIfPresent(String.self, forKey: .url)
         format = try container.decodeIfPresent(ImageFormat.self, forKey: .format)
-        width = try container.decodeIfPresent(Int.self, forKey: .width)
-        height = try container.decodeIfPresent(Int.self, forKey: .height)
+        width = try container.decode(Int.self, forKey: .width)
+        height = try container.decode(Int.self, forKey: .height)
+    }
+    var ratio : CGFloat  {
+        return CGFloat(self.width ?? 1) / CGFloat(self.height ?? 1)
     }
 }
 

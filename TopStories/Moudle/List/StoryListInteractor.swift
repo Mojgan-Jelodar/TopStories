@@ -12,21 +12,36 @@ import Foundation
 
 final class StoryListInteractor : StoryListInteractorInterface {
     private let worker: TopStoryNetworkManagerProtocol
+    private var stories : [Story] = []
+    private var bookmarkedList : [String : Bool] = [:]
     
     init(worker: TopStoryNetworkManagerProtocol) {
         self.worker = worker
     }
     
     func fetch(result: @escaping ((Result<Stories, APIError>) -> Void)) {
-        worker.home(completionHandler: { completionHandler in
+        worker.home(completionHandler: { [weak self] completionHandler in
             DispatchQueue.main.async {
                 switch completionHandler {
                 case .success(let value):
+                    self?.stories = value.results ?? []
                     result(.success(value))
                 case .failure(let error):
                     result(.failure(error))
                 }
             }
         })
+    }
+    
+    func didChangedBookmarked(url : String,value : Bool) {
+        self.bookmarkedList[url] = value
+    }
+    
+    func isBookmarked(url: String) -> Bool {
+        return self.bookmarkedList[url] ?? false
+    }
+    
+    func item(for index: Int) -> Story {
+        return self.stories[index]
     }
 }

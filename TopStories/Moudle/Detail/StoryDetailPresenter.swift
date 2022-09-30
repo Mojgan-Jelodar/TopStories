@@ -18,6 +18,7 @@ final class StoryDetailPresenter {
     private let formatter: StoryDetailFormatterInterface
     private let interactor: StoryDetailInteractorInterface
     private let wireframe: StoryDetailWireframeInterface
+    private weak var moudleDelegate: StoryDetailMoudleDelegate?
 
     // MARK: - Lifecycle -
 
@@ -25,23 +26,31 @@ final class StoryDetailPresenter {
         view: StoryDetailViewInterface,
         formatter: StoryDetailFormatterInterface,
         interactor: StoryDetailInteractorInterface,
-        wireframe: StoryDetailWireframeInterface
+        wireframe: StoryDetailWireframeInterface,
+        moudleDelegate: StoryDetailMoudleDelegate?
     ) {
         self.view = view
         self.formatter = formatter
         self.interactor = interactor
         self.wireframe = wireframe
+        self.moudleDelegate = moudleDelegate
     }
 }
 
 // MARK: - Extensions -
 
 extension StoryDetailPresenter: StoryDetailPresenterInterface {
+    func bookmark() {
+        self.interactor.toggleBookmark()
+        self.moudleDelegate?.isBookmarked(url: self.storyViewModel.url, value: self.storyViewModel.isBookmarked)
+        self.view.didChangedBookmarked()
+    }
+    
     var storyViewModel: StoryViewModel {
-        self.formatter.format(story: self.interactor.stroy)
+        self.formatter.format(story: self.interactor.stroy, isBookmarked: self.interactor.isBookMarked)
     }
     func moreInfoPressed() {
-        guard let url = self.formatter.make(url: self.storyViewModel.story.url ?? "") else {
+        guard let url = self.formatter.make(url: self.storyViewModel.url) else {
             return
         }
         wireframe.present(url: url)
