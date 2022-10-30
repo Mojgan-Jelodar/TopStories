@@ -26,9 +26,8 @@
 		096CC93228BA930800E5CB69 /* TopStoriesEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC93128BA930800E5CB69 /* TopStoriesEndpoint.swift */; };
 		096CC93428BA973B00E5CB69 /* AppConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC93328BA973B00E5CB69 /* AppConstant.swift */; };
 		096CC93728BA9C8100E5CB69 /* TopStories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CC93628BA9C8100E5CB69 /* TopStories.swift */; };
-		0971A72D28E5F0B80032ED82 /* UIImage+Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0971A72C28E5F0B80032ED82 /* UIImage+Cache.swift */; };
+		0971A72D28E5F0B80032ED82 /* UIImageView+LoadingImageFromNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0971A72C28E5F0B80032ED82 /* UIImageView+LoadingImageFromNetwork.swift */; };
 		0971A72F28E5F2DD0032ED82 /* UIView+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0971A72E28E5F2DD0032ED82 /* UIView+Loading.swift */; };
-		0971A73128E5FDFE0032ED82 /* UIImageView+LoadImageNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0971A73028E5FDFE0032ED82 /* UIImageView+LoadImageNetwork.swift */; };
 		099FAD0428BD6ED600A42F63 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FAD0328BD6ED600A42F63 /* Layout.swift */; };
 		099FAD0628BD717000A42F63 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FAD0528BD717000A42F63 /* StoryTableViewCell.swift */; };
 		09A127BD28E607F100E95BA3 /* StoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A127B828E607F100E95BA3 /* StoryDetailViewController.swift */; };
@@ -104,9 +103,8 @@
 		096CC93128BA930800E5CB69 /* TopStoriesEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopStoriesEndpoint.swift; sourceTree = "<group>"; };
 		096CC93328BA973B00E5CB69 /* AppConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstant.swift; sourceTree = "<group>"; };
 		096CC93628BA9C8100E5CB69 /* TopStories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopStories.swift; sourceTree = "<group>"; };
-		0971A72C28E5F0B80032ED82 /* UIImage+Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Cache.swift"; sourceTree = "<group>"; };
+		0971A72C28E5F0B80032ED82 /* UIImageView+LoadingImageFromNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+LoadingImageFromNetwork.swift"; sourceTree = "<group>"; };
 		0971A72E28E5F2DD0032ED82 /* UIView+Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Loading.swift"; sourceTree = "<group>"; };
-		0971A73028E5FDFE0032ED82 /* UIImageView+LoadImageNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+LoadImageNetwork.swift"; sourceTree = "<group>"; };
 		099FAD0328BD6ED600A42F63 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		099FAD0528BD717000A42F63 /* StoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
 		09A127B828E607F100E95BA3 /* StoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryDetailViewController.swift; sourceTree = "<group>"; };
@@ -367,9 +365,8 @@
 		09AA687428BBDA6400F62816 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				0971A72C28E5F0B80032ED82 /* UIImage+Cache.swift */,
+				0971A72C28E5F0B80032ED82 /* UIImageView+LoadingImageFromNetwork.swift */,
 				0971A72E28E5F2DD0032ED82 /* UIView+Loading.swift */,
-				0971A73028E5FDFE0032ED82 /* UIImageView+LoadImageNetwork.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -591,7 +588,7 @@
 				09C756E128BEA28000BAF69F /* StoryListViewController.swift in Sources */,
 				09A127BE28E607F100E95BA3 /* StoryDetailFormatter.swift in Sources */,
 				09A127C328E608C900E95BA3 /* StoryDetailInteractor.swift in Sources */,
-				0971A72D28E5F0B80032ED82 /* UIImage+Cache.swift in Sources */,
+				0971A72D28E5F0B80032ED82 /* UIImageView+LoadingImageFromNetwork.swift in Sources */,
 				096CC93728BA9C8100E5CB69 /* TopStories.swift in Sources */,
 				09C756D628BEA23500BAF69F /* ViewInterface.swift in Sources */,
 				099FAD0628BD717000A42F63 /* StoryTableViewCell.swift in Sources */,
@@ -609,7 +606,6 @@
 				096CC91F28BA893600E5CB69 /* APIEnvironment.swift in Sources */,
 				09AA686C28BB5DD000F62816 /* ParameterEncoding.swift in Sources */,
 				096CC92728BA8D1400E5CB69 /* RequestDispatcherProtocol.swift in Sources */,
-				0971A73128E5FDFE0032ED82 /* UIImageView+LoadImageNetwork.swift in Sources */,
 				096CC8EA28BA883A00E5CB69 /* AppDelegate.swift in Sources */,
 				09C756E028BEA28000BAF69F /* StoryListPresenter.swift in Sources */,
 				09C756E228BEA28000BAF69F /* StoryListFormatter.swift in Sources */,

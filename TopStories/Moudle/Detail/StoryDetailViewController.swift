@@ -76,7 +76,7 @@ final class StoryDetailViewController: UIViewController {
         coverView.backgroundColor = .lightGray
         coverView.contentMode = .scaleAspectFit
         coverView.clipsToBounds = true
-        coverView.loadImageFrom(urlString: self.presenter.storyViewModel.cover?.url ?? "")
+        coverView.loadImage(at: self.presenter.storyViewModel.cover?.url ?? "")
         return coverView
     }()
     

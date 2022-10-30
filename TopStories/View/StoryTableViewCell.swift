@@ -97,8 +97,13 @@ final class StoryTableViewCell: UITableViewCell {
         self.titleLabel.text = configuration?.viewModel.title
         self.bookMarkLabel.isHidden = !(configuration?.viewModel.isBookmarked ?? false)
         guard let largeThumbnailUrl = configuration?.viewModel.largeThumbnailUrl?.url else { return  }
-        self.iconView.loadImageFrom(urlString: largeThumbnailUrl)
-        
+        self.iconView.loadImage(at: largeThumbnailUrl)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.iconView.image = nil
+        self.iconView.cancelImageLoad()
     }
 }
 extension StoryTableViewCell {
